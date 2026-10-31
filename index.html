@@ -220,10 +220,15 @@ const UI={1:{ven:"REAL SETLIST · 2/13/97 · SHEPHERD'S BUSH EMPIRE (VIA PHISH.I
  k:'AMSTERDAM · CLEARED',t:'PAGE 2 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:['UNDER THE STAINED GLASS OF THE OLD CHURCH, THE SECOND PAGE WAITS. ITS RUNES SPELL ONE WORD: <b style="color:#ffd23f">"TELA."</b>','THE STRIPERS IN THE CANAL WERE CARRYING MESSAGES SOUTH... TO SOMEONE WAITING IN AN OLD THEATER IN <i>ROME.</i>'],n:'NEXT: ROME · TEATRO OLIMPICO · 2/22/97',next:3},
 3:{ven:'REAL SETLIST · 2/22/97 · TEATRO OLIMPICO, ROME (VIA PHISH.IN)',setl:'<b>SET 1:</b> WALFREDO, ALSO SPRACH ZARATHUSTRA<i> (SUPER BAD TEASE)</i>, FUNKY BITCH, THEME FROM THE BOTTOM, NICU, WHEN THE CIRCUS COMES, TALK<i> (TREY ON ACOUSTIC)</i>, SPLIT OPEN AND MELT, I DIDN\'T KNOW<i> (A CAPPELLA)</i>, CHARACTER ZERO<br><b>SET 2:</b> CHALK DUST TORTURE<i> (JAM CHART)</i>, BATHTUB GIN, SPARKLE, SIMPLE, JESUS JUST LEFT CHICAGO, HARRY HOOD, FREE, HELLO MY BABY<i> (A CAPPELLA)</i><br><b>ENCORE:</b> JOHNNY B. GOODE',
  found:'★ YOU FOUND THE 2/22/97 SETLIST PAGE!',hint:'FIND THE HIDDEN SETLIST PAGE NEAR THE COLOSSEUM TO REVEAL THE SECRETS',trip:'rome',bonus:1,
- k:'ROME · CLEARED',t:'PAGE 3 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:['MR. PALMER PRESSES THE THIRD PAGE INTO YOUR HANDS. ITS RUNES SPELL A NAME: <b style="color:#ffd23f">"COLONEL FORBIN."</b>','"WILSON IS FURIOUS," PALMER WHISPERS. "HIS COURIERS RODE NORTH OVER THE ALPS... TO A MARKET HALL IN <i>HAMBURG.</i>"'],n:'NEXT: HAMBURG · MARKTHALLE · 3/1/97 (COMING SOON)',next:0}};
-const LNAME={2:'AMSTERDAM',3:'ROME'};
-let curLvl=[2,3].includes(+(new URLSearchParams(location.search).get('lvl')))?+(new URLSearchParams(location.search).get('lvl')):1;
-function fillStory(l){const u=UI[l];document.getElementById('stK').textContent=u.k;document.getElementById('stT').textContent=u.t;document.getElementById('stP').innerHTML=u.p.map(x=>'<p>'+x+'</p>').join('');document.getElementById('stN').textContent=u.n;
+ k:'ROME · CLEARED',t:'PAGE 3 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:['MR. PALMER PRESSES THE THIRD PAGE INTO YOUR HANDS. ITS RUNES SPELL A NAME: <b style="color:#ffd23f">"COLONEL FORBIN."</b>','"WILSON IS FURIOUS," PALMER WHISPERS. "HIS COURIERS RODE NORTH OVER THE ALPS... TO A MARKET HALL IN <i>HAMBURG.</i>"'],n:'NEXT: HAMBURG · MARKTHALLE · 3/1/97',next:4},
+4:{ven:'REAL SETLIST · 3/1/97 · MARKTHALLE, HAMBURG (VIA PHISH.IN) · PARTS RELEASED ON SLIP, STITCH AND PASS',setl:"<b>SOUNDCHECK:</b> BANG A GONG, FUNKY BITCH, ATTACK ON THE BASS<br><b>SET 1:</b> CITIES<i> (BUST-OUT · FIRST IN 223 SHOWS)</i> &gt; THE OH KEE PA CEREMONY, DOWN WITH DISEASE<i> (UNDER PRESSURE TEASE)</i>, WEIGH, BEAUTY OF MY DREAMS, WOLFMAN'S BROTHER<i> (JAM CHART)</i> -&gt; JESUS JUST LEFT CHICAGO, REBA, HELLO MY BABY<i> (A CAPPELLA)</i>, POSSUM<i> (ALL FALL DOWN SIGNAL)</i><br><b>SET 2:</b> CARINI, DINNER AND A MOVIE &gt; MIKE'S SONG<i> (THE END / CAREFUL WITH THAT AXE, EUGENE)</i> -&gt; LAWN BOY &gt; WEEKAPAUG GROOVE<i> (CAN'T YOU HEAR ME KNOCKING JAM)</i>, THE MANGO SONG &gt; BILLY BREATHES, THEME FROM THE BOTTOM<br><b>ENCORE:</b> TASTE, SWEET ADELINE<i> (A CAPPELLA)</i>",
+ found:'★ YOU FOUND THE 3/1/97 SETLIST PAGE! PARTS OF THIS SHOW BECAME THE LIVE ALBUM SLIP, STITCH AND PASS',hint:'FIND THE HIDDEN SETLIST PAGE ON THE HARBOR TO REVEAL THE SECRETS',trip:'ham',summer:1,
+ k:'HAMBURG · CLEARED',t:'PAGE 4 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:["WOLFMAN'S BROTHER, FREE OF WILSON'S SPELL, DIGS THE FOURTH PAGE OUT OF A FISH CRATE. ITS RUNES SPELL A NAME: <b style=\"color:#ffd23f\">\"RUTHERFORD THE BRAVE.\"</b>",'"THE KING\'S MEN TOOK THE NEXT PAGE EAST," HE GROWLS. "TO A THEATER IN <i>PRAGUE.</i> BUT THE BAND HAS TO GO HOME FIRST..."'],n:'NEXT: PRAGUE · ARCHA THEATRE · 6/20/97 (COMING SOON)',next:0}};
+const SUMMER={k:"WINTER TOUR '97 · COMPLETE",t:"SUMMER TOUR '97",p:['THE WINTER EUROPEAN TOUR ENDED ON 3/2/97 AT PUMPEHUSET IN COPENHAGEN. THE BAND FLEW HOME FOR THE SPRING.','THE SUMMER TOUR KICKS OFF <b style="color:#ffd23f">6/13/97 IN DUBLIN, IRELAND</b> AND HEADS BACK ACROSS EUROPE...'],n:'ON TO PRAGUE · 6/20/97'};
+const LNAME={2:'AMSTERDAM',3:'ROME',4:'HAMBURG'};
+let curLvl=[2,3,4].includes(+(new URLSearchParams(location.search).get('lvl')))?+(new URLSearchParams(location.search).get('lvl')):1;
+let cardMode=0;function fillCard(u){cardMode=1;document.getElementById('stK').textContent=u.k;document.getElementById('stT').textContent=u.t;document.getElementById('stP').innerHTML=u.p.map(x=>'<p>'+x+'</p>').join('');document.getElementById('stN').textContent=u.n;const nb=document.getElementById('toNext');nb.style.display='';nb.textContent='CONTINUE ▶';document.getElementById('again2').style.display='none'}
+function fillStory(l){cardMode=0;const u=UI[l];document.getElementById('stK').textContent=u.k;document.getElementById('stT').textContent=u.t;document.getElementById('stP').innerHTML=u.p.map(x=>'<p>'+x+'</p>').join('');document.getElementById('stN').textContent=u.n;
  const nb=document.getElementById('toNext');nb.style.display=u.next?'':'none';if(u.next)nb.textContent='PLAY '+LNAME[u.next]+' ▶';document.getElementById('again2').style.display=u.next?'none':''}
 
 function launch(lvl){if(lvl)curLvl=lvl;curC=sel;ov(null);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));gameEl.classList.add('on');fit();
@@ -240,7 +245,7 @@ cv.addEventListener('pointerdown',()=>PG.begin());
 document.getElementById('cont').onclick=()=>{ov(null);PG.continue_()};
 ['quit','quit2','quit3','quit4'].forEach(i=>document.getElementById(i).onclick=quit);
 document.getElementById('again2').onclick=()=>launch(curLvl);
-document.getElementById('toNext').onclick=()=>{const n=UI[curLvl].next;if(n)launch(n)};
+document.getElementById('toNext').onclick=()=>{if(cardMode){fillStory(curLvl);PG.SFX.pick();return}const n=UI[curLvl].next;if(n)launch(n)};
 // tour-bus travel scene (reusable: TRIPS[level])
 const TRIPS={london:{from:{name:'LONDON',lon:-0.12,lat:51.51,date:'2/13/97',venue:"SHEPHERD'S BUSH EMPIRE"},
  stops:[{name:'BRUSSELS',lon:4.35,lat:50.85,date:'2/14/97',venue:'LE BOTANIQUE'},{name:'COLOGNE',lon:6.96,lat:50.94,date:'2/16/97',venue:'ALTER WARTESAAL'}],
@@ -250,12 +255,15 @@ const TRIPS={london:{from:{name:'LONDON',lon:-0.12,lat:51.51,date:'2/13/97',venu
  to:{name:'ROME',lon:12.48,lat:41.89,date:'2/22/97',venue:'TEATRO OLIMPICO'},gag:'fish',vehicle:'bus'},
  rome:{map:'europe',from:{name:'ROME',lon:12.48,lat:41.89,date:'2/22/97',venue:'TEATRO OLIMPICO'},
  stops:[{name:'CORTEMAGGIORE',lon:9.92,lat:45.03,date:'2/23/97',venue:'FILLMORE'},{name:'MUNICH',lon:11.58,lat:48.14,date:'2/25/97',venue:'INCOGNITO'},{name:'STUTTGART',lon:9.18,lat:48.78,date:'2/26/97',venue:'LONGHORN'},{name:'BERLIN',lon:13.40,lat:52.52,date:'2/28/97',venue:"HUXLEY'S NEUE WELT"}],
- to:{name:'HAMBURG',lon:9.99,lat:53.55,date:'3/1/97',venue:'MARKTHALLE'},gag:'cows',vehicle:'bus'}};
+ to:{name:'HAMBURG',lon:9.99,lat:53.55,date:'3/1/97',venue:'MARKTHALLE'},gag:'cows',vehicle:'bus'},
+ ham:{map:'north',from:{name:'HAMBURG',lon:9.99,lat:53.55,date:'3/1/97',venue:'MARKTHALLE'},
+ stops:[{name:'LUBECK',lon:10.69,lat:53.87,date:'A1 NORTH',venue:''},{name:'PUTTGARDEN',lon:11.23,lat:54.50,date:'FEHMARN',venue:''},{name:'RODBY',lon:11.35,lat:54.66,date:'FERRY',venue:''}],
+ to:{name:'COPENHAGEN',lon:12.57,lat:55.68,date:'3/2/97',venue:'PUMPEHUSET'},gag:'ferry',ferryLeg:2,vehicle:'bus'}};
 function travel(key,then){const tr=TRIPS[key],tv=document.getElementById('tv');ov('ovTravel');const sync=()=>{['left','top','width','height'].forEach(p=>tv.style[p]=cv.style[p])};sync();
  window._trip=TravelScene.play(Object.assign({canvas:tv,sync,music:document.getElementById('bMus').textContent.indexOf('ON')>=0,onDone:()=>{window._trip=null;then()}},tr))}
 function bonusRun(then){const tv=document.getElementById('tv');ov('ovTravel');const sync=()=>{['left','top','width','height'].forEach(p=>tv.style[p]=cv.style[p])};sync();
  window._bonus=VespaRun.play({canvas:tv,sync,img:PG.img,atlas:PG.ATLAS,cid:C[curC].id,music:document.getElementById('bMus').textContent.indexOf('ON')>=0,onDone:sc=>{window._bonus=null;window._bonusScore=sc;then()}})}
-document.getElementById('toTravel').onclick=()=>{const go=()=>travel(UI[curLvl].trip,()=>{fillStory(curLvl);ov('ovStory');PG.SFX.pick()});if(UI[curLvl].bonus)bonusRun(go);else go()};
+document.getElementById('toTravel').onclick=()=>{const go=()=>travel(UI[curLvl].trip,()=>{if(UI[curLvl].summer)fillCard(SUMMER);else fillStory(curLvl);ov('ovStory');PG.SFX.pick()});if(UI[curLvl].bonus)bonusRun(go);else go()};
 document.getElementById('bPause').onclick=()=>{PG.setPaused(true);ov('ovPause')};
 document.getElementById('resume').onclick=()=>{ov(null);PG.setPaused(false)};
 document.getElementById('bMus').onclick=e=>{e.target.textContent=PG.toggleMusic()?'♪ ON':'♪ OFF'};

@@ -12,7 +12,10 @@ const LAB=[['ENGLAND',-2.2,52.4],['FRANCE',1.8,49.2],['BELGIUM',4.4,50.4],['NETH
 const EUR=[[-8.5,43.7],[-1.8,43.4],[-1.2,46.0],[-2.2,47.1],[-4.6,47.9],[-4.5,48.6],[-1.6,48.7],[-1.3,49.7],[0.2,49.5],[1.6,50.2],[1.6,50.9],[2.5,51.1],[3.4,51.4],[4.1,52.0],[4.7,52.9],[5.6,53.4],[6.9,53.4],[8.5,53.6],[8.9,54.0],[8.6,55.0],[8.1,56.2],[10.4,56.2],[10.5,55.6],[9.9,54.6],[11,54],[12.5,54.4],[14.2,53.9],[16.5,54.5],[18.6,54.4],[20.6,54.6],[20.6,56.2],[20.6,39.5],[19.4,40.4],[19.5,41.8],[18.5,42.5],[16,43.5],[15.2,44.3],[14,45.2],[13.7,45.6],[12.3,45.4],[12.3,44.5],[13.5,43.6],[14.2,42.4],[15.9,41.9],[16.2,41.3],[18.5,40.2],[18.4,39.5],[15.7,39.5],[15.6,40.1],[14.9,40.3],[14.3,40.8],[13.0,41.2],[12.2,41.8],[11.1,42.4],[10.5,43.0],[10.2,43.9],[9.0,44.4],[8.0,43.9],[7.0,43.5],[5.4,43.2],[4.0,43.5],[3.1,43.1],[3.2,41.9],[2.1,41.3],[0.9,41.0],[0,39.5],[-8.5,39.5]];
 const GB2=[[-5.7,50.0],[-3.5,50.2],[-1.2,50.7],[1.4,51.1],[1.5,51.4],[0.9,51.8],[1.75,52.5],[1.6,52.9],[0.3,53.1],[0,53.6],[-0.5,54.5],[-1.6,55.6],[-2.2,56.2],[-8.5,56.2],[-8.5,50]];
 const COR=[[8.6,43.0],[9.5,42.9],[9.5,41.4],[8.8,41.5],[8.6,42.3]],SAR=[[8.2,41.1],[9.7,41.0],[9.7,39.5],[8.4,39.5],[8.4,40.6]];
+const NDE=[[3,53.4],[4.7,52.9],[5.6,53.4],[6.9,53.4],[8.5,53.6],[8.9,54.0],[8.6,55.0],[8.1,55.6],[8.2,56.6],[8.6,57.1],[10.0,57.6],[10.6,57.7],[10.3,57.0],[10.2,56.5],[10.9,56.4],[10.0,55.7],[10.5,55.6],[9.9,54.8],[10.0,54.5],[10.9,54.4],[10.7,54.0],[11.2,54.0],[12.1,54.2],[13.0,54.4],[13.6,54.6],[14.2,53.9],[17,54.3],[17,49],[3,49]];
+const ZEA=[[11.1,55.2],[11.7,55.0],[12.2,55.1],[12.5,55.3],[12.7,55.7],[12.6,56.05],[12.1,56.1],[11.5,55.95],[11.0,55.7]],LOL=[[11.0,54.65],[11.5,54.62],[12.0,54.7],[12.1,54.9],[11.6,54.95],[11.0,54.85]],FEH=[[11.0,54.42],[11.3,54.4],[11.3,54.53],[11.05,54.52]],FYN=[[9.8,55.2],[10.6,55.0],[10.8,55.4],[10.4,55.6],[9.8,55.5]],SKA=[[12.5,55.4],[12.9,55.4],[13.3,55.5],[14.3,55.6],[14.2,56.5],[12.6,56.4],[12.9,56.0]];
 const MAPS={benelux:{v:[-6,55.5,18,7],land:[[GB,'#3f7d36'],[EU,'#4b8a3c']],water:[IJ],bord:BORD,lab:LAB},
+ north:{v:[3.5,57.6,14,8.4],land:[[NDE,'#4b8a3c'],[ZEA,'#4b8a3c'],[LOL,'#4b8a3c'],[FEH,'#4b8a3c'],[FYN,'#4b8a3c'],[SKA,'#3f7d36']],water:[],bord:[[[8.6,54.9],[9.4,54.8],[9.9,54.8]],[[7.2,53.3],[7.05,52.6],[6.0,51.85]]],lab:[['NORTH SEA',5.5,55.4],['BALTIC SEA',13.4,54.95],['DENMARK',9.2,56.3],['GERMANY',10.5,52.3],['SWEDEN',14.6,56.9]]},
  europe:{v:[-8,55.5,28,15.5],land:[[GB2,'#3f7d36'],[EUR,'#4b8a3c'],[COR,'#4b8a3c'],[SAR,'#4b8a3c']],water:[],
   bord:[[[2.5,51.1],[4.2,49.95],[5.8,49.5]],[[5.8,49.5],[8.2,49.0],[7.6,47.6]],[[6.1,46.2],[7.0,45.9],[8.4,46.4],[9.3,46.5],[10.5,46.9],[12.4,47.0],[13.7,46.5]],[[-1.8,43.4],[3.2,42.4]],[[6.0,51.85],[7.05,52.6],[7.2,53.3]],[[7.6,47.6],[10.5,47.5],[13.0,47.6],[14.8,50.9]]],
   lab:[['NORTH SEA',3,54.2],['FRANCE',2.2,46.8],['GERMANY',10.3,51.2],['ITALY',14.4,42.6],['SWITZERLAND',8.2,46.9],['MEDITERRANEAN',5.6,42.2],['AUSTRIA',14.6,47.9]]}};
@@ -45,10 +48,22 @@ function moo(){try{if(!ac)return;const o=ac.createOscillator(),g=ac.createGain()
 function cows(c,x,y,dir,k,t){x=Math.round(x);y=Math.round(y);const off=k>1.3?(k-1.3)*14:0;
  for(let i=0;i<3;i++){const cx=x+dir*(8+i*5)+(i%2?off:-off)*(i===1?1:-1),cy=y-1+(i%2)*3;c.fillStyle='#000';c.fillRect(cx-3,cy-3,7,4);c.fillStyle='#fff';c.fillRect(cx-2,cy-3,5,3);c.fillStyle='#222';c.fillRect(cx-1,cy-3,2,2);c.fillRect(cx+dir*3,cy-4,2,2);c.fillStyle='#000';c.fillRect(cx-2,cy+1,1,1);c.fillRect(cx+2,cy+1,1,1)}
  if(k>.9&&k<2.6){c.fillStyle='#000';c.fillRect(x-dir*2-1,y-12,4,4);c.fillStyle='#e8c8a0';c.fillRect(x-dir*2,y-11,2,2);c.fillStyle='#fff';c.fillRect(x-dir*2-9,y-22,18,7);c.fillStyle='#c8102e';c.fillRect(x-dir*2-7,y-20,14,3)}}
+function horn(){try{if(!ac)return;[73,110].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=i?'square':'sawtooth';o.frequency.value=f;g.gain.setValueAtTime(.12,ac.currentTime);g.gain.setValueAtTime(.12,ac.currentTime+.9);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+1.3);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+1.3)})}catch(e){}}
+function ferry(c,x,y,t,k){x=Math.round(x);y=Math.round(y)+2+Math.round(Math.sin(t*3));c.fillStyle='#000';c.fillRect(x-15,y-1,30,6);c.fillStyle='#f2f2f2';c.fillRect(x-14,y,28,4);c.fillStyle='#c8102e';c.fillRect(x-14,y+3,28,1);c.fillStyle='#ddd';c.fillRect(x-4,y-6,10,5);c.fillStyle='#4aa3df';c.fillRect(x-3,y-5,2,1);c.fillRect(x+1,y-5,2,1);c.fillStyle='#c8102e';c.fillRect(x+3,y-9,3,3);
+ if(k>2.6&&k<3.6){c.fillStyle='rgba(255,255,255,.8)';c.fillRect(x+5,y-13-((t*8|0)%3),2,2);c.fillRect(x+8,y-15-((t*8|0)%3),2,2)}}
+function ferryPanel(c,k,t){const w=520,h=150,x=512-w/2,y=330;c.fillStyle='#000';c.fillRect(x+6,y+6,w,h);c.fillStyle='#1a1430';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=3;c.strokeRect(x,y,w,h);
+ c.save();c.beginPath();c.rect(x+3,y+3,w-6,h-6);c.clip();const tilt=Math.sin(t*2.2)*.09;c.translate(512,y+h/2);c.rotate(tilt);
+ c.fillStyle='#3a3050';c.fillRect(-300,-80,600,160);for(let i=-5;i<=5;i++){c.fillStyle='#5a4a3a';c.fillRect(i*48-14,-30,28,34);c.fillStyle='#2a2238';c.fillRect(i*48-14,-36,28,8)}
+ c.fillStyle='#6a6a7a';c.fillRect(-300,30,600,40);
+ const cx=Math.sin(t*2.2)*190;c.fillStyle='#000';c.fillRect(cx-38,10,76,26);c.fillStyle='#222';c.fillRect(cx-36,12,72,22);c.fillStyle='#bbb';c.fillRect(cx-32,14,64,3);c.fillStyle='#ffd23f';c.font='7px "Press Start 2P",monospace';c.textAlign='center';c.fillText('PAGE',cx,30);
+ const tx=cx-Math.sign(Math.cos(t*2.2))*70,run=(t*12|0)%2;c.fillStyle='#000';c.fillRect(tx-9,-20,18,44);c.fillStyle='#d9733a';c.fillRect(tx-7,-30,14,12);c.fillStyle='#e8c8a0';c.fillRect(tx-5,-22,10,8);c.fillStyle='#111';c.fillRect(tx-7,-12,14,18);c.fillStyle='#2a3a6a';c.fillRect(tx-7,6,6,16-run*4);c.fillRect(tx+1,6,6,12+run*4);c.fillStyle='#e8c8a0';c.fillRect(tx+(Math.cos(t*2.2)<0?7:-11),-8,4,4);
+ c.restore();
+ const line=k<1.2?'ALL ABOARD THE PUTTGARDEN-RODBY FERRY!':k<2.6?"THE SHIP ROCKS... PAGE'S KEYBOARD CASE SLIDES!":k<3.6?"TOOOOT! THE SHIP'S HORN! EVERYONE JUMPS!":'TREY CATCHES THE CASE. WELCOME TO DENMARK!';
+ txt(c,line,512,y-14,9,k>=2.6&&k<3.6?'#ffd23f':'#fff');if(k>=2.6&&k<3.6)txt(c,'TOOOOT!',512,y+40,26,'#ff3b3b')}
 function txt(c,s,x,y,sz,col,al){c.font=sz+'px "Press Start 2P",monospace';c.textAlign=al||'center';c.fillStyle='#000';c.fillText(s,x+2,y+2);c.fillStyle=col;c.fillText(s,x,y)}
 function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M.v[3];const MAP=MAPC[o.map||'benelux']=MAPC[o.map||'benelux']||bakeMap(M);const cv=o.canvas,c=cv.getContext('2d'),low=document.createElement('canvas');low.width=LW;low.height=LH;const l=low.getContext('2d');
  const pts=[o.from,...(o.stops||[]),o.to].map(s=>P(s.lon,s.lat));const seg=[];let tot=0;for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(d);tot+=d}
- const T0=.9,TD=5.2,TA=T0+TD,TEND=TA+2.4;let t=0,lastT=performance.now(),done=false,raf=0,trail=[],hT=0,cowT=0,lastE=0,mooed=0;
+ const T0=.9,TD=5.2,TA=T0+TD,TEND=TA+2.4;let t=0,lastT=performance.now(),done=false,raf=0,trail=[],hT=0,cowT=0,lastE=0,mooed=0,fT=0,honk=0;
  if(o.music!==false)startMusic();
  const posAt=u=>{let d=u*tot;for(let i=0;i<seg.length;i++){if(d<=seg[i]||i===seg.length-1){const k=seg[i]?Math.min(1,d/seg[i]):1;return[pts[i][0]+(pts[i+1][0]-pts[i][0])*k,pts[i][1]+(pts[i+1][1]-pts[i][1])*k,Math.sign(pts[i+1][0]-pts[i][0])||1,i]}d-=seg[i]}};
  const reach=[0];{let a=0;seg.forEach(s=>{a+=s;reach.push(a/tot)})}
@@ -56,6 +71,7 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
  cv.addEventListener('pointerdown',finish);
  function frame(now){if(done)return;const dt=Math.min(.05,(now-lastT)/1000);lastT=now;t+=dt;o.sync&&o.sync();
   if(o.gag==='cows'){const cowE=reach[1]+(reach[2]-reach[1])*.5;if(lastE>=cowE&&cowT<2.4){hT+=dt;cowT+=dt}else if(cowT>0)cowT+=dt;if(cowT>1.1&&!mooed){mooed=1;moo()}}
+  if(o.gag==='ferry'){const fi=o.ferryLeg||2,fE=reach[fi]+(reach[fi+1]-reach[fi])*.45;if(lastE>=fE&&fT<4.2){hT+=dt;fT+=dt}else if(fT>0)fT+=dt;if(fT>2.6&&!honk){honk=1;horn()}}
   const u=Math.max(0,Math.min(1,(t-hT-T0)/TD)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;const[bx,by,dir]=posAt(e);lastE=e;
   l.drawImage(MAP,0,0);
   l.fillStyle='#ffd23f';for(let i=0;i<pts.length-1;i++){const[x0,y0]=pts[i],[x1,y1]=pts[i+1];const n=seg[i];for(let s=0;s<n;s+=4){const g=(reach[i]+s/tot);l.fillStyle=g<=e?'#ffd23f':'rgba(255,255,255,.35)';l.fillRect(Math.round(x0+(x1-x0)*s/n),Math.round(y0+(y1-y0)*s/n),1,1)}}
@@ -63,6 +79,7 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
   if(o.gag==='lizard'){const lu=Math.max(0,e-.04-Math.max(0,t-T0)*.03);if(t>T0&&lu>0&&t<TA+.4){const[lx,ly]=posAt(lu);drawLizard(l,lx,ly+5,t)}}
   if(o.vehicle==='plane'){l.fillStyle='#fff';l.fillRect(Math.round(bx)-6,Math.round(by)-1,12,2);l.fillRect(Math.round(bx)-1,Math.round(by)-5,3,10)}else drawBus(l,bx,by+((t*8|0)%2&&u<1?-1:0),dir,t);
   if(o.gag==='fish')fishZ(l,bx,by,t);
+  if(o.gag==='ferry'){const fi=o.ferryLeg||2;if(lastE>=reach[fi]&&lastE<=reach[fi+1])ferry(l,bx,by,t,fT)}
   if(o.gag==='cows'&&cowT>0&&cowT<3.4)cows(l,bx,by,dir,cowT,t);
   c.imageSmoothingEnabled=false;c.drawImage(low,0,0,1024,576);
   c.fillStyle='rgba(7,4,13,.75)';c.fillRect(0,0,1024,44);txt(c,'ON THE ROAD · '+o.from.name+' → '+o.to.name,512,30,16,'#ffd23f');
@@ -73,6 +90,7 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
   if(o.gag==='fish'&&t>T0+.5&&t<TA)txt(c,'FISH IS NAPPING ON THE LUGGAGE RACK',512,530,10,'#ffb3b3');
   if(t-hT>=TA){const k=Math.min(1,(t-TA)/.25),w=560*k,h=130*k,x=512-w/2,y=288-h/2-20;c.fillStyle='#000';c.fillRect(x+8,y+8,w,h);c.fillStyle='#14102a';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=4;c.strokeRect(x,y,w,h);
    if(k>=1){txt(c,'NEXT SHOW',512,y+32,10,'#ff8a3d');txt(c,o.to.date+' · '+o.to.venue,512,y+68,16,'#fff');txt(c,o.to.name,512,y+104,14,'#ffd23f')}}
+  if(o.gag==='ferry'&&fT>0&&fT<4.6)ferryPanel(c,fT,t);
   if(o.gag==='cows'&&cowT>0&&cowT<3.2)txt(c,cowT<1.1?'COWS ON THE ALPINE PASS! THE BUS STOPS...':'"MOOOOO!" MIKE MOOS THEM OFF THE ROAD',512,530,10,cowT<1.1?'#fff':'#ffd23f');
   if(t>1.2)txt(c,'TAP TO SKIP',1012,566,8,'rgba(255,255,255,.6)','right');
   if(t-hT>=TEND){finish();return}raf=requestAnimationFrame(frame)}
