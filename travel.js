@@ -41,23 +41,29 @@ function drawBus(c,x,y,dir,t){c.save();c.translate(Math.round(x),Math.round(y));
 function drawLizard(c,x,y,t,fall){c.save();c.translate(Math.round(x),Math.round(y));const s=(t*12|0)%2;
  c.fillStyle='#000';c.fillRect(-3,-7,7,8);c.fillStyle='#9a7448';c.fillRect(-2,-7,5,4);c.fillStyle='#5fbf4a';c.fillRect(-2,-3,5,3);c.fillRect(-4+s,-1,2,1);c.fillRect(2-s,0,2,1);c.fillRect(-5,-2,2,1);c.restore()}
 function fishZ(c,x,y,t){x=Math.round(x);y=Math.round(y);c.fillStyle='#000';c.fillRect(x-7,y-11,14,4);c.fillStyle='#5a3a1a';c.fillRect(x-6,y-10,3,2);c.fillStyle='#c83a3a';c.fillRect(x-3,y-10,6,2);c.fillStyle='#e8c8a0';c.fillRect(x+3,y-10,3,2);c.fillStyle='#8a6a40';c.fillRect(x-8,y-9,16,1);for(let i=0;i<3;i++){c.fillStyle='rgba(255,255,255,'+(.4+.6*(((t*1.5+i/3)%1)))+')';c.fillRect(Math.round(x)+4+i*3,Math.round(y)-12-i*3-(t*6%3),2,2)}}
+function moo(){try{if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(180,ac.currentTime);o.frequency.linearRampToValueAtTime(130,ac.currentTime+.7);g.gain.setValueAtTime(.12,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.8);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+.8)}catch(e){}}
+function cows(c,x,y,dir,k,t){x=Math.round(x);y=Math.round(y);const off=k>1.3?(k-1.3)*14:0;
+ for(let i=0;i<3;i++){const cx=x+dir*(8+i*5)+(i%2?off:-off)*(i===1?1:-1),cy=y-1+(i%2)*3;c.fillStyle='#000';c.fillRect(cx-3,cy-3,7,4);c.fillStyle='#fff';c.fillRect(cx-2,cy-3,5,3);c.fillStyle='#222';c.fillRect(cx-1,cy-3,2,2);c.fillRect(cx+dir*3,cy-4,2,2);c.fillStyle='#000';c.fillRect(cx-2,cy+1,1,1);c.fillRect(cx+2,cy+1,1,1)}
+ if(k>.9&&k<2.6){c.fillStyle='#000';c.fillRect(x-dir*2-1,y-12,4,4);c.fillStyle='#e8c8a0';c.fillRect(x-dir*2,y-11,2,2);c.fillStyle='#fff';c.fillRect(x-dir*2-9,y-22,18,7);c.fillStyle='#c8102e';c.fillRect(x-dir*2-7,y-20,14,3)}}
 function txt(c,s,x,y,sz,col,al){c.font=sz+'px "Press Start 2P",monospace';c.textAlign=al||'center';c.fillStyle='#000';c.fillText(s,x+2,y+2);c.fillStyle=col;c.fillText(s,x,y)}
 function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M.v[3];const MAP=MAPC[o.map||'benelux']=MAPC[o.map||'benelux']||bakeMap(M);const cv=o.canvas,c=cv.getContext('2d'),low=document.createElement('canvas');low.width=LW;low.height=LH;const l=low.getContext('2d');
  const pts=[o.from,...(o.stops||[]),o.to].map(s=>P(s.lon,s.lat));const seg=[];let tot=0;for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(d);tot+=d}
- const T0=.9,TD=5.2,TA=T0+TD,TEND=TA+2.4;let t=0,lastT=performance.now(),done=false,raf=0,trail=[];
+ const T0=.9,TD=5.2,TA=T0+TD,TEND=TA+2.4;let t=0,lastT=performance.now(),done=false,raf=0,trail=[],hT=0,cowT=0,lastE=0,mooed=0;
  if(o.music!==false)startMusic();
  const posAt=u=>{let d=u*tot;for(let i=0;i<seg.length;i++){if(d<=seg[i]||i===seg.length-1){const k=seg[i]?Math.min(1,d/seg[i]):1;return[pts[i][0]+(pts[i+1][0]-pts[i][0])*k,pts[i][1]+(pts[i+1][1]-pts[i][1])*k,Math.sign(pts[i+1][0]-pts[i][0])||1,i]}d-=seg[i]}};
  const reach=[0];{let a=0;seg.forEach(s=>{a+=s;reach.push(a/tot)})}
  function finish(){if(done)return;done=true;cancelAnimationFrame(raf);mus&&mus.stop();mus=null;cv.removeEventListener('pointerdown',finish);o.onDone&&o.onDone()}
  cv.addEventListener('pointerdown',finish);
  function frame(now){if(done)return;const dt=Math.min(.05,(now-lastT)/1000);lastT=now;t+=dt;o.sync&&o.sync();
-  const u=Math.max(0,Math.min(1,(t-T0)/TD)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;const[bx,by,dir]=posAt(e);
+  if(o.gag==='cows'){const cowE=reach[1]+(reach[2]-reach[1])*.5;if(lastE>=cowE&&cowT<2.4){hT+=dt;cowT+=dt}else if(cowT>0)cowT+=dt;if(cowT>1.1&&!mooed){mooed=1;moo()}}
+  const u=Math.max(0,Math.min(1,(t-hT-T0)/TD)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;const[bx,by,dir]=posAt(e);lastE=e;
   l.drawImage(MAP,0,0);
   l.fillStyle='#ffd23f';for(let i=0;i<pts.length-1;i++){const[x0,y0]=pts[i],[x1,y1]=pts[i+1];const n=seg[i];for(let s=0;s<n;s+=4){const g=(reach[i]+s/tot);l.fillStyle=g<=e?'#ffd23f':'rgba(255,255,255,.35)';l.fillRect(Math.round(x0+(x1-x0)*s/n),Math.round(y0+(y1-y0)*s/n),1,1)}}
   pts.forEach((p,i)=>{const big=i===0||i===pts.length-1,hit=e>=reach[i]-.001;l.fillStyle='#000';l.fillRect(Math.round(p[0])-(big?3:2),Math.round(p[1])-(big?3:2),big?6:4,big?6:4);l.fillStyle=big?(hit?'#ff3b3b':'#ff8a3d'):(hit?'#ffd23f':'#cfcfcf');l.fillRect(Math.round(p[0])-(big?2:1),Math.round(p[1])-(big?2:1),big?4:2,big?4:2)});
   if(o.gag==='lizard'){const lu=Math.max(0,e-.04-Math.max(0,t-T0)*.03);if(t>T0&&lu>0&&t<TA+.4){const[lx,ly]=posAt(lu);drawLizard(l,lx,ly+5,t)}}
   if(o.vehicle==='plane'){l.fillStyle='#fff';l.fillRect(Math.round(bx)-6,Math.round(by)-1,12,2);l.fillRect(Math.round(bx)-1,Math.round(by)-5,3,10)}else drawBus(l,bx,by+((t*8|0)%2&&u<1?-1:0),dir,t);
   if(o.gag==='fish')fishZ(l,bx,by,t);
+  if(o.gag==='cows'&&cowT>0&&cowT<3.4)cows(l,bx,by,dir,cowT,t);
   c.imageSmoothingEnabled=false;c.drawImage(low,0,0,1024,576);
   c.fillStyle='rgba(7,4,13,.75)';c.fillRect(0,0,1024,44);txt(c,'ON THE ROAD · '+o.from.name+' → '+o.to.name,512,30,16,'#ffd23f');
   M.lab.forEach(([s,lo,la])=>{const[x,y]=P(lo,la);txt(c,s,x*4,y*4,10,'rgba(255,255,255,.55)')});
@@ -65,10 +71,11 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
    const up=i%2?1:-1;txt(c,s.name,x*4,y*4+(up<0?-28:36),big?12:9,big?'#fff':'#ffd23f');txt(c,s.date,x*4,y*4+(up<0?-14:50),8,'#8fd3ff')});
   if(o.gag==='lizard'&&t>T0+1.2&&t<T0+3.6)txt(c,'"WAIT FOR ME!"',512,530,10,'#7f7');
   if(o.gag==='fish'&&t>T0+.5&&t<TA)txt(c,'FISH IS NAPPING ON THE LUGGAGE RACK',512,530,10,'#ffb3b3');
-  if(t>=TA){const k=Math.min(1,(t-TA)/.25),w=560*k,h=130*k,x=512-w/2,y=288-h/2-20;c.fillStyle='#000';c.fillRect(x+8,y+8,w,h);c.fillStyle='#14102a';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=4;c.strokeRect(x,y,w,h);
+  if(t-hT>=TA){const k=Math.min(1,(t-TA)/.25),w=560*k,h=130*k,x=512-w/2,y=288-h/2-20;c.fillStyle='#000';c.fillRect(x+8,y+8,w,h);c.fillStyle='#14102a';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=4;c.strokeRect(x,y,w,h);
    if(k>=1){txt(c,'NEXT SHOW',512,y+32,10,'#ff8a3d');txt(c,o.to.date+' · '+o.to.venue,512,y+68,16,'#fff');txt(c,o.to.name,512,y+104,14,'#ffd23f')}}
+  if(o.gag==='cows'&&cowT>0&&cowT<3.2)txt(c,cowT<1.1?'COWS ON THE ALPINE PASS! THE BUS STOPS...':'"MOOOOO!" MIKE MOOS THEM OFF THE ROAD',512,530,10,cowT<1.1?'#fff':'#ffd23f');
   if(t>1.2)txt(c,'TAP TO SKIP',1012,566,8,'rgba(255,255,255,.6)','right');
-  if(t>=TEND){finish();return}raf=requestAnimationFrame(frame)}
+  if(t-hT>=TEND){finish();return}raf=requestAnimationFrame(frame)}
  raf=requestAnimationFrame(frame);return{skip:finish}}
 window.TravelScene={play,bakeMap};
 })();
