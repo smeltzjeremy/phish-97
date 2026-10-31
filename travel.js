@@ -16,6 +16,8 @@ const NDE=[[3,53.4],[4.7,52.9],[5.6,53.4],[6.9,53.4],[8.5,53.6],[8.9,54.0],[8.6,
 const ZEA=[[11.1,55.2],[11.7,55.0],[12.2,55.1],[12.5,55.3],[12.7,55.7],[12.6,56.05],[12.1,56.1],[11.5,55.95],[11.0,55.7]],LOL=[[11.0,54.65],[11.5,54.62],[12.0,54.7],[12.1,54.9],[11.6,54.95],[11.0,54.85]],FEH=[[11.0,54.42],[11.3,54.4],[11.3,54.53],[11.05,54.52]],FYN=[[9.8,55.2],[10.6,55.0],[10.8,55.4],[10.4,55.6],[9.8,55.5]],SKA=[[12.5,55.4],[12.9,55.4],[13.3,55.5],[14.3,55.6],[14.2,56.5],[12.6,56.4],[12.9,56.0]];
 const MAPS={benelux:{v:[-6,55.5,18,7],land:[[GB,'#3f7d36'],[EU,'#4b8a3c']],water:[IJ],bord:BORD,lab:LAB},
  north:{v:[3.5,57.6,14,8.4],land:[[NDE,'#4b8a3c'],[ZEA,'#4b8a3c'],[LOL,'#4b8a3c'],[FEH,'#4b8a3c'],[FYN,'#4b8a3c'],[SKA,'#3f7d36']],water:[],bord:[[[8.6,54.9],[9.4,54.8],[9.9,54.8]],[[7.2,53.3],[7.05,52.6],[6.0,51.85]]],lab:[['NORTH SEA',5.5,55.4],['BALTIC SEA',13.4,54.95],['DENMARK',9.2,56.3],['GERMANY',10.5,52.3],['SWEDEN',14.6,56.9]]},
+ central:{v:[6.5,55.0,10.5,5.9],land:[[EUR,'#4b8a3c']],water:[],bord:[[[12.1,50.3],[12.5,50.4],[13.0,50.5],[13.6,50.7],[14.3,50.9],[14.8,51.0],[15.0,50.9],[16.0,50.6],[16.5,50.4]],[[12.1,50.3],[12.5,49.9],[12.8,49.4],[13.4,48.9],[13.8,48.7]],[[14.8,51.0],[14.6,51.8],[14.6,52.6],[14.2,53.3],[14.2,53.9]],[[8.6,54.9],[9.4,54.8],[9.9,54.8]],[[6.0,51.85],[7.05,52.6],[7.2,53.3]]],
+  lab:[['NORTH SEA',7.4,54.4],['BALTIC SEA',12.6,54.75],['GERMANY',10.6,51.6],['CZECH REP.',15.2,49.6],['POLAND',15.9,52.2]]},
  europe:{v:[-8,55.5,28,15.5],land:[[GB2,'#3f7d36'],[EUR,'#4b8a3c'],[COR,'#4b8a3c'],[SAR,'#4b8a3c']],water:[],
   bord:[[[2.5,51.1],[4.2,49.95],[5.8,49.5]],[[5.8,49.5],[8.2,49.0],[7.6,47.6]],[[6.1,46.2],[7.0,45.9],[8.4,46.4],[9.3,46.5],[10.5,46.9],[12.4,47.0],[13.7,46.5]],[[-1.8,43.4],[3.2,42.4]],[[6.0,51.85],[7.05,52.6],[7.2,53.3]],[[7.6,47.6],[10.5,47.5],[13.0,47.6],[14.8,50.9]]],
   lab:[['NORTH SEA',3,54.2],['FRANCE',2.2,46.8],['GERMANY',10.3,51.2],['ITALY',14.4,42.6],['SWITZERLAND',8.2,46.9],['MEDITERRANEAN',5.6,42.2],['AUSTRIA',14.6,47.9]]}};
@@ -48,6 +50,7 @@ function moo(){try{if(!ac)return;const o=ac.createOscillator(),g=ac.createGain()
 function cows(c,x,y,dir,k,t){x=Math.round(x);y=Math.round(y);const off=k>1.3?(k-1.3)*14:0;
  for(let i=0;i<3;i++){const cx=x+dir*(8+i*5)+(i%2?off:-off)*(i===1?1:-1),cy=y-1+(i%2)*3;c.fillStyle='#000';c.fillRect(cx-3,cy-3,7,4);c.fillStyle='#fff';c.fillRect(cx-2,cy-3,5,3);c.fillStyle='#222';c.fillRect(cx-1,cy-3,2,2);c.fillRect(cx+dir*3,cy-4,2,2);c.fillStyle='#000';c.fillRect(cx-2,cy+1,1,1);c.fillRect(cx+2,cy+1,1,1)}
  if(k>.9&&k<2.6){c.fillStyle='#000';c.fillRect(x-dir*2-1,y-12,4,4);c.fillStyle='#e8c8a0';c.fillRect(x-dir*2,y-11,2,2);c.fillStyle='#fff';c.fillRect(x-dir*2-9,y-22,18,7);c.fillStyle='#c8102e';c.fillRect(x-dir*2-7,y-20,14,3)}}
+function stampSfx(){try{if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=90;g.gain.setValueAtTime(.18,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.12);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+.13)}catch(e){}}
 function horn(){try{if(!ac)return;[73,110].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=i?'square':'sawtooth';o.frequency.value=f;g.gain.setValueAtTime(.12,ac.currentTime);g.gain.setValueAtTime(.12,ac.currentTime+.9);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+1.3);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+1.3)})}catch(e){}}
 function ferry(c,x,y,t,k){x=Math.round(x);y=Math.round(y)+2+Math.round(Math.sin(t*3));c.fillStyle='#000';c.fillRect(x-15,y-1,30,6);c.fillStyle='#f2f2f2';c.fillRect(x-14,y,28,4);c.fillStyle='#c8102e';c.fillRect(x-14,y+3,28,1);c.fillStyle='#ddd';c.fillRect(x-4,y-6,10,5);c.fillStyle='#4aa3df';c.fillRect(x-3,y-5,2,1);c.fillRect(x+1,y-5,2,1);c.fillStyle='#c8102e';c.fillRect(x+3,y-9,3,3);
  if(k>2.6&&k<3.6){c.fillStyle='rgba(255,255,255,.8)';c.fillRect(x+5,y-13-((t*8|0)%3),2,2);c.fillRect(x+8,y-15-((t*8|0)%3),2,2)}}
@@ -60,6 +63,13 @@ function ferryPanel(c,k,t){const w=520,h=150,x=512-w/2,y=330;c.fillStyle='#000';
  c.restore();
  const line=k<1.2?'ALL ABOARD THE PUTTGARDEN-RODBY FERRY!':k<2.6?"THE SHIP ROCKS... PAGE'S KEYBOARD CASE SLIDES!":k<3.6?"TOOOOT! THE SHIP'S HORN! EVERYONE JUMPS!":'TREY CATCHES THE CASE. WELCOME TO DENMARK!';
  txt(c,line,512,y-14,9,k>=2.6&&k<3.6?'#ffd23f':'#fff');if(k>=2.6&&k<3.6)txt(c,'TOOOOT!',512,y+40,26,'#ff3b3b')}
+function stampPanel(c,k,t){const w=560,h=160,x=512-w/2,y=320;c.fillStyle='#000';c.fillRect(x+6,y+6,w,h);c.fillStyle='#1a1430';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=3;c.strokeRect(x,y,w,h);
+ c.fillStyle='#2a2a3a';c.fillRect(x+14,y+16,110,128);c.fillStyle='#d8d0b0';c.fillRect(x+24,y+30,90,40);c.fillStyle='#333';c.fillRect(x+24,y+70,90,74);c.fillStyle='#c8102e';c.fillRect(x+14,y+16,110,8);c.fillStyle='#fff';c.fillRect(x+14,y+24,110,4);
+ c.fillStyle='#3a4a2a';c.fillRect(x+52,y+40,30,30);c.fillStyle='#e8c8a0';c.fillRect(x+58,y+46,18,14);c.fillStyle='#2a3a1a';c.fillRect(x+50,y+36,34,8);
+ ['TREY','PAGE','MIKE','FISH'].forEach((n,i)=>{const px=x+150+i*100,py=y+36,on=k>.7+i*.55;c.fillStyle='#000';c.fillRect(px-2,py-2,84,104);c.fillStyle='#7a1a2a';c.fillRect(px,py,80,100);c.fillStyle='#e8d9a0';c.fillRect(px+8,py+10,64,40);c.fillStyle='#ffd23f';c.font='7px "Press Start 2P",monospace';c.textAlign='center';c.fillText(n,px+40,py+70);c.fillText('USA',px+40,py+88);
+  if(on){c.save();c.translate(px+40,py+30);c.rotate(-.25);c.strokeStyle='#2a5aa8';c.lineWidth=3;c.strokeRect(-30,-14,60,28);c.fillStyle='#2a5aa8';c.fillText('CZ 21.6.',0,4);c.restore()}});
+ const n=Math.min(4,Math.floor((k-.7)/.55)+1);const line=k<.7?'THE CZECH-GERMAN BORDER AT CINOVEC. PASSPORTS, PLEASE!':n<4?'STAMP! '.repeat(Math.max(0,n)):'ALL FOUR STAMPED. GUTE FAHRT! 384 MILES TO GO...';
+ txt(c,line,512,y-14,9,k>=.7&&n<4?'#ffd23f':'#fff')}
 function txt(c,s,x,y,sz,col,al){c.font=sz+'px "Press Start 2P",monospace';c.textAlign=al||'center';c.fillStyle='#000';c.fillText(s,x+2,y+2);c.fillStyle=col;c.fillText(s,x,y)}
 function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M.v[3];const MAP=MAPC[o.map||'benelux']=MAPC[o.map||'benelux']||bakeMap(M);const cv=o.canvas,c=cv.getContext('2d'),low=document.createElement('canvas');low.width=LW;low.height=LH;const l=low.getContext('2d');
  const pts=[o.from,...(o.stops||[]),o.to].map(s=>P(s.lon,s.lat));const seg=[];let tot=0;for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(d);tot+=d}
@@ -71,6 +81,7 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
  cv.addEventListener('pointerdown',finish);
  function frame(now){if(done)return;const dt=Math.min(.05,(now-lastT)/1000);lastT=now;t+=dt;o.sync&&o.sync();
   if(o.gag==='cows'){const cowE=reach[1]+(reach[2]-reach[1])*.5;if(lastE>=cowE&&cowT<2.4){hT+=dt;cowT+=dt}else if(cowT>0)cowT+=dt;if(cowT>1.1&&!mooed){mooed=1;moo()}}
+  if(o.gag==='border'){const bE=reach[1]-.002;if(lastE>=bE&&fT<3.6){hT+=dt;fT+=dt;const n=Math.floor((fT-.7)/.55);if(fT>.7&&n>=0&&n<4&&n>=honk){honk=n+1;stampSfx()}}else if(fT>0)fT+=dt}
   if(o.gag==='ferry'){const fi=o.ferryLeg||2,fE=reach[fi]+(reach[fi+1]-reach[fi])*.45;if(lastE>=fE&&fT<4.2){hT+=dt;fT+=dt}else if(fT>0)fT+=dt;if(fT>2.6&&!honk){honk=1;horn()}}
   const u=Math.max(0,Math.min(1,(t-hT-T0)/TD)),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;const[bx,by,dir]=posAt(e);lastE=e;
   l.drawImage(MAP,0,0);
@@ -81,6 +92,7 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
   if(o.gag==='fish')fishZ(l,bx,by,t);
   if(o.gag==='ferry'){const fi=o.ferryLeg||2;if(lastE>=reach[fi]&&lastE<=reach[fi+1])ferry(l,bx,by,t,fT)}
   if(o.gag==='cows'&&cowT>0&&cowT<3.4)cows(l,bx,by,dir,cowT,t);
+  if(o.night){const nk=Math.max(0,Math.min(1,(e-.75)/.25));l.fillStyle='rgba(10,10,40,'+(.55*(1-nk))+')';l.fillRect(0,0,LW,LH);if(nk>0){l.fillStyle='rgba(255,170,80,'+(.18*nk)+')';l.fillRect(0,0,LW,LH)}l.fillStyle='#fff8c0';l.fillRect(Math.round(200+e*30),Math.round(12+e*40),4,4);l.fillStyle='rgba(10,10,40,.9)';l.fillRect(Math.round(201+e*30),Math.round(12+e*40),2,3)}
   c.imageSmoothingEnabled=false;c.drawImage(low,0,0,1024,576);
   c.fillStyle='rgba(7,4,13,.75)';c.fillRect(0,0,1024,44);txt(c,'ON THE ROAD · '+o.from.name+' → '+o.to.name,512,30,16,'#ffd23f');
   M.lab.forEach(([s,lo,la])=>{const[x,y]=P(lo,la);txt(c,s,x*4,y*4,10,'rgba(255,255,255,.55)')});
@@ -91,6 +103,8 @@ function play(o){const M=MAPS[o.map||'benelux'];[BX,BY]=M.v;SX=LW/M.v[2];SY=LH/M
   if(t-hT>=TA){const k=Math.min(1,(t-TA)/.25),w=560*k,h=130*k,x=512-w/2,y=288-h/2-20;c.fillStyle='#000';c.fillRect(x+8,y+8,w,h);c.fillStyle='#14102a';c.fillRect(x,y,w,h);c.strokeStyle='#ffd23f';c.lineWidth=4;c.strokeRect(x,y,w,h);
    if(k>=1){txt(c,'NEXT SHOW',512,y+32,10,'#ff8a3d');txt(c,o.to.date+' · '+o.to.venue,512,y+68,16,'#fff');txt(c,o.to.name,512,y+104,14,'#ffd23f')}}
   if(o.gag==='ferry'&&fT>0&&fT<4.6)ferryPanel(c,fT,t);
+  if(o.gag==='border'&&fT>0&&fT<4)stampPanel(c,fT,t);
+  if(o.miles&&t>T0&&t-hT<TA)txt(c,'ODOMETER: '+String(Math.round(e*o.miles)).padStart(3,'0')+' MILES · DRIVING THROUGH THE NIGHT',512,530,10,'#8fd3ff');
   if(o.gag==='cows'&&cowT>0&&cowT<3.2)txt(c,cowT<1.1?'COWS ON THE ALPINE PASS! THE BUS STOPS...':'"MOOOOO!" MIKE MOOS THEM OFF THE ROAD',512,530,10,cowT<1.1?'#fff':'#ffd23f');
   if(t>1.2)txt(c,'TAP TO SKIP',1012,566,8,'rgba(255,255,255,.6)','right');
   if(t-hT>=TEND){finish();return}raf=requestAnimationFrame(frame)}
