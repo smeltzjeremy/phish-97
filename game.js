@@ -22,7 +22,8 @@ const WAVES=[
  {at:2150,list:['guard','grunt','bobby','pruss']},
  {at:3050,list:['guard','bobby','grunt','guard','pruss']},
  {at:4096,list:['sarge'],boss:1}];
-const BREAK=[[700,470,'crate','tea'],[1700,490,'crate','chips'],[2500,470,'cart','glow'],[2850,540,'crate','tea'],[3450,500,'cart','chips'],[4150,500,'phone','chips'],[1300,480,'crate','note'],[2700,520,'crate','note'],[4330,545,'crate','note']];
+const BREAK=[[700,470,'crate','tea'],[1700,490,'crate','chips'],[2500,470,'cart','glow'],[2850,540,'crate','tea'],[3450,500,'cart','chips'],[4150,500,'phone','chips'],[1300,480,'crate','note'],[2700,520,'crate','note'],[4330,545,'crate','note'],[3800,470,'crate','setlist']];
+const DEBUTS=['WALFREDO','LOVE ME','MY SOUL','WHEN THE CIRCUS COMES','ROCK A WILLIAM'];
 let cv,ctx,img={},G=null,raf=0,last=0,keys={},touch={x:0,y:0,a:0,j:0,s:0},AC=null,master=null,musicOn=true,onExit=null,PORTRAIT=null;
 // ---------- audio ----------
 function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.5;master.connect(AC.destination)}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
@@ -112,7 +113,7 @@ function update(dt){
  if(G.shake>0)G.shake-=dt;
  if(G.mode==='intro'||G.mode==='over'||G.mode==='end'||G.mode==='paused')return;
  if(G.mode==='walkin'){updatePlayerAuto(dt);return}
- if(G.mode==='stage'){if(G.modeT>10.5&&!G.sent){G.sent=1;onExit&&onExit('done',{score:G.score,freed:G.freed,hits:G.hits,time:G.time,cid:G.cid,lives:G.lives})}return}
+ if(G.mode==='stage'){if(G.modeT>10.5&&!G.sent){G.sent=1;onExit&&onExit('done',{score:G.score,freed:G.freed,hits:G.hits,time:G.time,cid:G.cid,lives:G.lives,setlist:!!G.setlist})}return}
  if(G.slowmo>0){G.slowmo-=dt;dt*=.3}
  G.time+=dt;
  updateProj(dt);p_note(dt);
@@ -163,6 +164,7 @@ function update(dt){
  for(const it of G.items){it.t+=dt;if(!it.got&&Math.abs(it.x-p.x)<45&&Math.abs(it.y-p.y)<35&&p.z<30){it.got=1;SFX.pick();
   if(it.k==='chips'){p.hp=Math.min(c.hp,p.hp+45);addFx({k:'txt',s:'FISH & CHIPS +45',x:p.x,y:p.y-200,c:'#7f7'})}
   if(it.k==='tea'){p.hp=Math.min(c.hp,p.hp+18);addFx({k:'txt',s:'CUPPA TEA +18',x:p.x,y:p.y-200,c:'#7f7'})}
+  if(it.k==='setlist'){G.setlist=1;G.score+=400;addFx({k:'banner',s:'2/13/97 SETLIST PAGE FOUND!',life:1.8})}
   if(it.k==='note'){p.note=10;addFx({k:'txt',s:'MUSIC NOTE POWER!',x:p.x,y:p.y-200,c:'#ffd23f'})}
   if(it.k==='glow'){p.boost=9;addFx({k:'txt',s:'GLOW STICK SPEED!',x:p.x,y:p.y-200,c:'#8f8'})}
   G.score+=100}}
@@ -226,6 +228,19 @@ function drawProj(pr,cam){const x=pr.x-cam,y=pr.y-pr.z;
  if(pr.k==='chord'){txt('♫',x,y,24,'#8fd3ff','center','#1b2a8a')}
  if(pr.k==='bassw'){ctx.strokeStyle='rgba(255,90,60,.85)';ctx.lineWidth=6;for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(x-pr.dir*i*18,y,14+i*6,46+i*8,0,-Math.PI/2*pr.dir,Math.PI/2*pr.dir,pr.dir<0);ctx.stroke()}}
  if(pr.k==='stick'){ctx.save();ctx.translate(x,y);ctx.rotate(pr.t*24);ctx.fillStyle='#d9b47a';ctx.fillRect(-26,-4,52,8);ctx.fillStyle='#f3e2bd';ctx.fillRect(20,-5,8,10);ctx.restore()}}
+function marquee(x,y,w,t,title){ctx.fillStyle='#120a06';ctx.fillRect(x-w/2,y,w,46);ctx.strokeStyle='#c99a3c';ctx.lineWidth=3;ctx.strokeRect(x-w/2,y,w,46);
+ for(let i=0;i<Math.floor(w/14);i++){const on=(i+Math.floor(t*8))%3===0;ctx.fillStyle=on?'#fff3b0':'#7a5a20';ctx.fillRect(x-w/2+4+i*14,y-5,5,5);ctx.fillRect(x-w/2+4+i*14,y+46,5,5)}
+ txt(title,x,y+17,10,'#ff5a5a','center','#000');const n=Math.floor(t/1.6)%DEBUTS.length;ctx.globalAlpha=Math.min(1,(t%1.6)*4);txt(DEBUTS[n],x,y+37,DEBUTS[n].length>14?9:12,'#ffd23f','center','#000');ctx.globalAlpha=1}
+function drawSigns(cam){const t=G.t;
+ // Tube: Rock A William gig poster (over the 2nd tube screen's left poster)
+ let x=1024+478-cam;if(x>-120&&x<W+40){ctx.fillStyle='#1a1020';ctx.fillRect(x,118,92,128);ctx.fillStyle='#7a1022';ctx.fillRect(x+4,122,84,120);const g=ctx.createRadialGradient(x+46,170,4,x+46,170,50);g.addColorStop(0,'#ffcf5a');g.addColorStop(1,'rgba(255,120,40,0)');ctx.fillStyle=g;ctx.fillRect(x+4,122,84,120);
+  txt('PHISH',x+46,142,10,'#fff','center','#000');txt('ROCK A',x+46,184,10,'#ffd23f','center','#000');txt('WILLIAM',x+46,198,10,'#ffd23f','center','#000');txt('NEW SONG',x+46,222,6,'#fff','center','#000');txt('2.13.97',x+46,234,6,'#8fd3ff','center','#000')}
+ // Market: NEW SONG! sign-board NPC (friendly freed lizard busker)
+ x=2048+900-cam;if(x>-150&&x<W+150){const yb=458,n=Math.floor(t/2)%DEBUTS.length,bob=Math.abs(Math.sin(t*3))*4;shadow(x,yb,30);spr('guard_free',x,yb-bob,false,.8);
+  ctx.fillStyle='#5a3b1d';ctx.fillRect(x-3,yb-250-bob,6,90);ctx.fillStyle='#f1e6c8';ctx.fillRect(x-80,yb-300-bob,160,54);ctx.strokeStyle='#5a3b1d';ctx.lineWidth=3;ctx.strokeRect(x-80,yb-300-bob,160,54);
+  txt('NEW SONG!',x,yb-280-bob,10,'#c8102e','center','rgba(0,0,0,.2)');txt(DEBUTS[n],x,yb-258-bob,DEBUTS[n].length>12?6:9,'#1b2a8a','center','rgba(0,0,0,.15)')}
+ // Empire: DEBUT NIGHT marquee under PHISH TONIGHT
+ x=4096+738-cam;if(x>-200&&x<W+200)marquee(x,352,236,t,'DEBUT NIGHT · 5 NEW SONGS')}
 function loseLife(){const p=G.p;G.lives--;if(G.lives<0){G.lives=0;G.mode='over';G.modeT=0;onExit&&onExit('over');return}
  p.hp=G.c.hp;p.dead=0;p.st='idle';p.inv=2.5;p.z=0;addFx({k:'banner',s:'ROCK ON!',life:1});
  G.en.forEach(e=>{if(e.st!=='free'&&e.st!=='dead'){e.vx=Math.sign(e.x-p.x)*400;e.st='down';e.stT=.8;e.vz=200}})}
@@ -238,10 +253,11 @@ function render(){
  for(const s of SEG){const x=s[1]-cam;if(x>-1030&&x<W)ctx.drawImage(img[s[0]],x,0,1025,H)}
  // seam fades
  for(const b of[2048,4096]){const x=b-cam;if(x>-100&&x<W+100){const g=ctx.createLinearGradient(x-90,0,x+90,0);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.5,'rgba(0,0,0,.85)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(x-90,0,180,H)}}
+ drawSigns(cam);
  // draw list
  const L=[];
  for(const b of G.brk)if(b.hp>0)L.push({y:b.y,d:()=>{shadow(b.x-cam,b.y,45);spr('props_'+b.k,b.x-cam+(b.shake>0?rnd(-4,4):0),b.y,false,b.k==='phone'?1:1)}});
- for(const it of G.items)L.push({y:it.y,d:()=>{shadow(it.x-cam,it.y,18);const bob=Math.sin(it.t*6)*4;if(it.k==='note'){const g=ctx.createRadialGradient(it.x-cam,it.y-40+bob,2,it.x-cam,it.y-40+bob,34);g.addColorStop(0,'rgba(255,230,120,.9)');g.addColorStop(1,'rgba(255,200,60,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(it.x-cam,it.y-40+bob,34,0,7);ctx.fill();txt('♪',it.x-cam,it.y-26+bob,34,'#ffd23f','center','#c8102e')}else spr('props_'+it.k,it.x-cam,it.y-8+bob);if(it.t>6&&Math.floor(it.t*8)%2)return}});
+ for(const it of G.items)L.push({y:it.y,d:()=>{shadow(it.x-cam,it.y,18);const bob=Math.sin(it.t*6)*4;if(it.k==='setlist'){const yy=it.y-50+bob;ctx.fillStyle='rgba(255,240,180,.35)';ctx.beginPath();ctx.arc(it.x-cam,yy,30,0,7);ctx.fill();ctx.save();ctx.translate(it.x-cam,yy);ctx.rotate(-.12);ctx.fillStyle='#f1e6c8';ctx.fillRect(-16,-21,32,42);ctx.strokeStyle='#6b5434';ctx.lineWidth=2;ctx.strokeRect(-16,-21,32,42);ctx.fillStyle='#6b5434';for(let i=0;i<6;i++)ctx.fillRect(-11,-14+i*6,i%2?16:22,2);ctx.fillStyle='#c8102e';ctx.fillRect(-11,-19,14,3);ctx.restore()}else if(it.k==='note'){const g=ctx.createRadialGradient(it.x-cam,it.y-40+bob,2,it.x-cam,it.y-40+bob,34);g.addColorStop(0,'rgba(255,230,120,.9)');g.addColorStop(1,'rgba(255,200,60,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(it.x-cam,it.y-40+bob,34,0,7);ctx.fill();txt('♪',it.x-cam,it.y-26+bob,34,'#ffd23f','center','#c8102e')}else spr('props_'+it.k,it.x-cam,it.y-8+bob);if(it.t>6&&Math.floor(it.t*8)%2)return}});
  for(const e of G.en){L.push({y:e.y,d:()=>drawEnemy(e,cam)})}
  L.push({y:G.p.y+.1,d:()=>drawPlayer(cam)});
  L.sort((a,b)=>a.y-b.y).forEach(o=>o.d());
@@ -338,6 +354,7 @@ function renderStage(){const t=G.modeT;ctx.drawImage(img.stage,0,0,W,H);
  // crowd heads bouncing
  ctx.fillStyle='#0a0710';for(let i=0;i<34;i++){const x=i*31+(i%2)*12,y=H-40+Math.abs(Math.sin(t*7+i*1.7))*-14;ctx.beginPath();ctx.arc(x,y,17,0,7);ctx.fill();ctx.fillRect(x-20,y+8,40,60);if(i%3==0){ctx.fillRect(x+10,y-40+Math.sin(t*9+i)*6,7,40)}}
  for(let i=0;i<8;i++){const a=t*2+i;txt(i%2?'♪':'♫',(i*137+t*60)%W,120+Math.sin(a)*40,22,['#ffd23f','#ff3b3b','#8fd3ff'][i%3])}
+ marquee(W/2,470,300,t,'DEBUT NIGHT · 5 NEW SONGS');
  if(t<3)txt('LIVE AT SHEPHERD\'S BUSH EMPIRE',W/2,96,16,'#ffd23f','center','#c8102e');
  else if(t<6.5)txt('FISH TAKES A VACUUM SOLO!',W/2,96,18,'#ffd23f','center','#c8102e');
  else txt(CH[G.cid].n+' STAGE DIVES INTO LONDON!',W/2,96,16,'#ffd23f','center','#c8102e');

@@ -104,6 +104,7 @@ button:disabled{opacity:.4}
 #title .sub{font-size:clamp(9px,min(3vw,3.4vh),18px)}
 #title .press{margin-top:min(20px,2vh);font-size:clamp(12px,min(4vw,4.5vh),22px)}
 #title .foot{font-size:clamp(6px,min(2vw,2.3vh),8px)}
+#setl i{display:none;font-style:normal;color:#8fd3ff}#setl u{text-decoration:none}#setl.found i{display:inline}#setl.found u{color:#ffd23f}#setl.found u:after{content:' ★'}
 </style></head><body>
 <div class="stage"><div class="beam r"></div><div class="beam b"></div></div>
 <section id="title" class="screen on z">
@@ -133,7 +134,7 @@ button:disabled{opacity:.4}
   <div class="k" style="color:#ff8a3d">NEXT: AMSTERDAM · PARADISO · 2/17/97 (COMING SOON)</div><button id="toScore">CONTINUE</button></div></div>
  <div class="ov" id="ovScore"><div class="lv" style="max-width:760px"><div class="t">SHOW REPORT</div><div class="stat" id="stats"></div>
   <div class="k">REAL SETLIST · 2/13/97 · SHEPHERD'S BUSH EMPIRE (VIA PHISH.IN)</div>
-  <div class="setl"><b>SET 1:</b> CHALK DUST TORTURE, WOLFMAN'S BROTHER, 2001 &gt; STASH, WALFREDO, TASTE, WASTE, POOR HEART, CHARACTER ZERO, PEACHES EN REGALIA, LOVE ME, DAVID BOWIE<br><b>SET 2:</b> JULIUS, CARS TRUCKS BUSES, MY SOUL, PUNCH YOU IN THE EYE &gt; JAM &gt; SLAVE TO THE TRAFFIC LIGHT, WHEN THE CIRCUS COMES, MAZE &gt; ROCK A WILLIAM, HARRY HOOD, FRANKENSTEIN<br><b>ENCORE:</b> PRINCE CASPIAN, JOHNNY B. GOODE</div>
+  <div class="k" id="slnote" style="color:#ff8a3d;font-size:8px"></div><div class="setl" id="setl"><b>SET 1:</b> CHALK DUST TORTURE, WOLFMAN'S BROTHER, 2001<i> (SUPER BAD TEASE)</i> &gt; STASH, <u>WALFREDO</u>, TASTE, WASTE, POOR HEART, CHARACTER ZERO, PEACHES EN REGALIA, <u>LOVE ME</u>, DAVID BOWIE<br><b>SET 2:</b> JULIUS, CARS TRUCKS BUSES, <u>MY SOUL</u>, PUNCH YOU IN THE EYE &gt; JAM<i> (CLOSE TO THE EDGE TEASE · JAM CHART)</i> &gt; SLAVE TO THE TRAFFIC LIGHT, <u>WHEN THE CIRCUS COMES</u>, MAZE &gt; <u>ROCK A WILLIAM</u>, HARRY HOOD<i> (JAM CHART)</i>, FRANKENSTEIN<br><b>ENCORE:</b> PRINCE CASPIAN, JOHNNY B. GOODE</div>
   <div class="row"><button id="again">PLAY AGAIN</button><button id="quit3">TITLE</button></div></div></div>
 </section>
 <script src="assets1.js"></script><script src="assets2.js"></script><script src="game.js"></script>
@@ -215,7 +216,8 @@ function launch(){curC=sel;ov(null);document.querySelectorAll('.screen').forEach
  PG.start(cv,C[sel].id,PORT,(ev,st)=>{if(ev==='over')ov('ovOver');if(ev==='done'){window._last=st;
   document.getElementById('pgimg').src='';const m=PG.ATLAS.props_page;const c2=document.createElement('canvas');c2.width=m[2];c2.height=m[3];c2.getContext('2d').drawImage(PG.img.atlas,m[0],m[1],m[2],m[3],0,0,m[2],m[3]);document.getElementById('pgimg').src=c2.toDataURL();
   const mm=Math.floor(st.time/60),ss=String(Math.floor(st.time%60)).padStart(2,'0');
-  document.getElementById('stats').innerHTML=C[sel].n+' · SCORE '+st.score+'<br>LIZARDS FREED: '+st.freed+' · HITS: '+st.hits+' · TIME '+mm+':'+ss;ov('ovStory');PG.SFX.pick()}})}
+  document.getElementById('stats').innerHTML=C[sel].n+' · SCORE '+st.score+'<br>LIZARDS FREED: '+st.freed+' · HITS: '+st.hits+' · TIME '+mm+':'+ss;
+  const SL=document.getElementById('setl');SL.classList.toggle('found',!!st.setlist);document.getElementById('slnote').innerHTML=st.setlist?'★ YOU FOUND THE 2/13/97 SETLIST PAGE! ★ = PHISH DEBUT':'FIND THE HIDDEN SETLIST PAGE IN THE MARKET TO REVEAL THE SECRETS';ov('ovStory');PG.SFX.pick()}})}
 function quit(){PG.stop();gameEl.classList.remove('on');ov(null);show('title');fit()}
 document.getElementById('go').onclick=()=>{beep(523,.1);setTimeout(()=>beep(784,.18),110);launch()};
 cv.addEventListener('pointerdown',()=>PG.begin());
