@@ -83,6 +83,27 @@ button:disabled{opacity:.4}
 .setl{font-size:8px;line-height:1.9;text-align:left;color:#e8dcc0}.setl b{color:#ffd23f;font-weight:normal}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .stat{font-size:10px;line-height:2}
+
+#select{padding:calc(env(safe-area-inset-top) + 6px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 8px) calc(env(safe-area-inset-left) + 10px)!important}
+#select.on{display:flex;flex-direction:column;align-items:center;gap:6px;overflow:hidden}
+#select h2{margin:2px 0;font-size:clamp(11px,3.6vw,20px);flex:none}
+#select .grid{flex:1 1 auto;min-height:0;width:100%;display:grid;gap:8px;justify-content:center;align-content:center}
+#select .card{padding:3px}
+#select .info{margin-top:0;flex:none;padding:8px 10px;gap:5px}
+#select .info .nm{font-size:12px}#select .info .ins{font-size:8px;line-height:1.4}
+#select .stats{grid-template-columns:auto 1fr auto 1fr;gap:4px 8px;font-size:7px}
+#select .bar i{width:12px;height:7px}#select .bar{gap:2px}
+#select .moves{font-size:7px;line-height:1.6}
+#select .btnbar{position:static;background:none;padding:0;flex:none}
+#select .btnbar button{font-size:14px;padding:10px 26px}
+@media (orientation:landscape){#select.on{display:grid;grid-template-columns:1fr minmax(240px,34%);grid-template-rows:auto 1fr auto;column-gap:12px;row-gap:6px;align-items:stretch}
+ #select h2{grid-column:1/3}#select .grid{grid-column:1;grid-row:2/4}#select .info{grid-column:2;grid-row:2;align-self:center}#select .btnbar{grid-column:2;grid-row:3;justify-self:center}}
+#title,#select{position:absolute!important;inset:0;z-index:1}
+#title{justify-content:safe center!important;gap:min(28px,4vh)!important}
+#title h1{font-size:clamp(26px,min(11vw,13vh),92px)}
+#title .sub{font-size:clamp(9px,min(3vw,3.4vh),18px)}
+#title .press{margin-top:min(20px,2vh);font-size:clamp(12px,min(4vw,4.5vh),22px)}
+#title .foot{font-size:clamp(6px,min(2vw,2.3vh),8px)}
 </style></head><body>
 <div class="stage"><div class="beam r"></div><div class="beam b"></div></div>
 <section id="title" class="screen on z">
@@ -131,7 +152,7 @@ C.forEach((c,i)=>{const d=document.createElement('div');d.className='card';d.inn
 function pick(i,snd){sel=i;[...grid.children].forEach((e,j)=>{e.classList.remove('sel');if(j===i){void e.offsetWidth;e.classList.add('sel')}});const c=C[i];
 info.innerHTML='<div class="nm">'+c.n+' <span style="font-size:10px;color:#ff8a3d">· '+c.role+'</span></div><div class="ins">'+c.ins+'</div><div class="stats">'+L.map((l,k)=>l+'<div class="bar">'+[1,2,3,4,5].map(v=>'<i class="'+(v<=c.s[k]?'f':'')+'"></i>').join('')+'</div>').join('')+'</div><div class="moves"><b>ATTACK:</b> '+c.a+'<br><b>SPECIAL:</b> '+c.sp+'</div>';
 if(snd)beep(660,.08)}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));scrollTo(0,0)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));scrollTo(0,0);if(id==='select')setTimeout(()=>window.fitSelect&&fitSelect(),0)}
 function start(){if(!document.getElementById('title').classList.contains('on'))return;beep(440,.08);setTimeout(()=>beep(880,.12),90);show('select')}
 document.getElementById('title').onclick=start;
 
@@ -167,11 +188,18 @@ function fit(){const vv=window.visualViewport;const w=vv?vv.width*vv.scale:inner
 function clampN(v,a,b){return v<a?a:v>b?b:v}
 addEventListener('resize',fit);addEventListener('orientationchange',()=>{fit();setTimeout(fit,250);setTimeout(fit,700)});
 if(window.visualViewport){visualViewport.addEventListener('resize',fit);visualViewport.addEventListener('scroll',()=>{window.scrollTo(0,0);fit()})}
+
+window.fitSelect=fitSelect;function fitSelect(){const sec=document.getElementById('select');if(!sec.classList.contains('on'))return;const vv=window.visualViewport;sec.style.height=(vv?vv.height:innerHeight)+'px';
+ const g=document.getElementById('grid');g.style.gridTemplateColumns='1fr';[...g.children].forEach(c=>c.style.width='');
+ const W=g.clientWidth,H=g.clientHeight,gap=8;let best=null;
+ for(const cols of[2,4]){const rows=4/cols;const cw=Math.min((W-gap*(cols-1))/cols,((H-gap*(rows-1))/rows-6)*3/4);if(!best||cw>best.cw)best={cols,cw}}
+ const cw=Math.max(40,Math.floor(best.cw));g.style.gridTemplateColumns='repeat('+best.cols+','+cw+'px)'}
+addEventListener('resize',fitSelect);if(window.visualViewport)visualViewport.addEventListener('resize',fitSelect);addEventListener('orientationchange',()=>setTimeout(fitSelect,300));
 // ---- anti-zoom / anti-scroll ----
 const stopEv=e=>{e.preventDefault()};
 ['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,stopEv,{passive:false}));
 document.addEventListener('dblclick',stopEv,{passive:false});
-document.addEventListener('touchmove',e=>{if(e.touches.length>1){e.preventDefault();return}const sc=e.target.closest&&e.target.closest('.screen.on');if(!sc||gameEl.classList.contains('on'))e.preventDefault()},{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length>1){e.preventDefault();return}if(gameEl.classList.contains('on')&&e.target.closest&&e.target.closest('#game'))e.preventDefault()},{passive:false});
 let lastTouchEnd=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouchEnd<350&&!e.target.closest('button,.card'))e.preventDefault();lastTouchEnd=n},{passive:false});
 gameEl.addEventListener('touchstart',e=>{if(e.target.closest('.tc,#cv,#topbtns'))e.preventDefault()},{passive:false});
 gameEl.addEventListener('touchend',e=>{if(!e.target.closest('.tc,#cv,#topbtns'))return;const b=e.target.closest('#topbtns button');e.preventDefault();if(b)b.click()},{passive:false});
