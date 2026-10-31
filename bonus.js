@@ -55,7 +55,7 @@ function play(o){const cv=o.canvas,c=cv.getContext('2d'),A=o.atlas,IM=o.img;
    if(b.k==='pine'){c.fillStyle='#3a2410';c.fillRect(x-4*s2*3,y-150*s2*3,8*s2*3,150*s2*3);c.fillStyle='#24461e';c.beginPath();c.ellipse(x,y-150*s2*3,60*s2*3,22*s2*3,0,0,7);c.fill();continue}
    if(b.car)spr(b.k,x,y,s2*1.25);else food_(b.k,x,y,s2*1.25)}
   // player
-  const lean=steer*.18,bob=Math.sin(t*20)*(go?2:0);spr('bon_vespa',W/2,H-6+bob,.95,lean);if(inv>0&&Math.floor(t*20)%2){c.fillStyle='rgba(255,255,255,.25)';c.fillRect(W/2-60,H-190,120,190)}
+  const lean=steer*.18,bob=Math.sin(t*20)*(go?2:0);spr(A['ride_'+o.cid]?'ride_'+o.cid:'bon_vespa',W/2,H-6+bob,.95,lean);if(inv>0&&Math.floor(t*20)%2){c.fillStyle='rgba(255,255,255,.25)';c.fillRect(W/2-60,H-190,120,190)}
   c.restore();
   if(flash>0){c.fillStyle='rgba(255,60,60,.35)';c.fillRect(0,0,W,H)}
   // HUD
