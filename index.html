@@ -59,6 +59,8 @@ button:disabled{opacity:.4}
 #game{position:fixed;left:0;top:0;width:100%;height:100%;overscroll-behavior:none;-webkit-touch-callout:none;background:#000;display:none;z-index:5;touch-action:none;user-select:none;-webkit-user-select:none}
 #game.on{display:block}
 #game.noctl .tc{display:none!important}
+@media (max-height:380px){#game .lv{padding:8px 12px;gap:5px}#game #ovStory .lv img{display:none}#game .lv p{font-size:7px;line-height:1.5;margin:0}#game .lv .t{font-size:12px}#game .lv button{font-size:11px;padding:8px 14px}}
+@media (max-width:520px){#game .lv{padding:12px;gap:8px}#game .lv .t{font-size:13px}#game .lv p{font-size:8px;line-height:1.6}#game .lv img{width:44px}#game .lv button{font-size:12px;padding:9px 14px}}
 @media (max-height:520px){#game .lv{padding:12px;gap:8px}#game .lv .t{font-size:14px}#game .lv p{font-size:8px;line-height:1.7}#game .lv img{width:44px}#game .lv button{font-size:13px;padding:10px 18px}}
 #cv{position:absolute;left:0;top:0;touch-action:none;image-rendering:auto;background:#000}
 .tc{position:absolute;z-index:6;display:none;touch-action:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -128,14 +130,13 @@ button:disabled{opacity:.4}
  <div class="ov" id="rot"><div class="ph">📱</div><div>ROTATE YOUR PHONE<br>FOR THE BEST GIG</div><button id="rotok" style="font-size:10px;padding:10px 14px">PLAY ANYWAY</button></div>
  <div class="ov" id="ovPause"><div class="lv"><div class="t">PAUSED</div><div class="v" style="font-size:9px">MOVE: STICK / ARROWS · ATTACK: J<br>JUMP: K · SPECIAL: L (WHEN JAM IS FULL)</div><button id="resume">RESUME</button><button id="quit" style="font-size:11px;padding:10px 16px">QUIT TO TITLE</button></div></div>
  <div class="ov" id="ovOver"><div class="lv"><div class="t" style="color:#ff3b3b">GAME OVER</div><div class="v">KING WILSON LAUGHS FROM HIS THRONE...</div><div class="c">CONTINUE?</div><div class="row"><button id="cont">CONTINUE</button><button id="quit2">QUIT</button></div></div></div>
- <div class="ov" id="ovStory"><div class="lv"><img id="pgimg" style="width:64px;border:none" alt=""><div class="k">LONDON · CLEARED</div><div class="t">PAGE 1 OF THE HELPING FRIENDLY BOOK RECOVERED!</div>
-  <p>THE PAGE GLOWS IN YOUR HANDS. ITS RUNES SPELL ONE WORD: <b style="color:#ffd23f">"ICCULUS."</b> THE FREED LIZARDS CHEER IN THE RAIN.</p>
-  <p>BUT A MESSAGE IS PINNED TO THE STAGE DOOR, STAMPED WITH WILSON'S SEAL: <i>"THE NEXT PAGE SLEEPS BENEATH A CHURCH OF SONG. COME TO AMSTERDAM... IF YOU DARE."</i></p>
-  <div class="k" style="color:#ff8a3d">NEXT: AMSTERDAM · PARADISO · 2/17/97 (COMING SOON)</div><div class="row"><button id="again2">PLAY AGAIN</button><button id="quit4">TITLE</button></div></div></div>
+ <div class="ov" id="ovStory"><div class="lv"><img id="pgimg" style="width:64px;border:none" alt=""><div class="k" id="stK"></div><div class="t" id="stT"></div>
+  <div id="stP"></div>
+  <div class="k" id="stN" style="color:#ff8a3d"></div><div class="row"><button id="toNext">PLAY AMSTERDAM ▶</button><button id="again2">PLAY AGAIN</button><button id="quit4">TITLE</button></div></div></div>
  <div class="ov" id="ovTravel" style="padding:0;background:#000;z-index:9"><canvas id="tv" width="1024" height="576" style="position:absolute;touch-action:none"></canvas></div>
  <div class="ov" id="ovScore"><div class="lv" style="max-width:760px"><div class="t">SHOW REPORT</div><div class="stat" id="stats"></div>
-  <div class="k">REAL SETLIST · 2/13/97 · SHEPHERD'S BUSH EMPIRE (VIA PHISH.IN)</div>
-  <div class="k" id="slnote" style="color:#ff8a3d;font-size:8px"></div><div class="setl" id="setl"><b>SET 1:</b> CHALK DUST TORTURE, WOLFMAN'S BROTHER, 2001<i> (SUPER BAD TEASE)</i> &gt; STASH, <u>WALFREDO</u>, TASTE, WASTE, POOR HEART, CHARACTER ZERO, PEACHES EN REGALIA, <u>LOVE ME</u>, DAVID BOWIE<br><b>SET 2:</b> JULIUS, CARS TRUCKS BUSES, <u>MY SOUL</u>, PUNCH YOU IN THE EYE &gt; JAM<i> (CLOSE TO THE EDGE TEASE · JAM CHART)</i> &gt; SLAVE TO THE TRAFFIC LIGHT, <u>WHEN THE CIRCUS COMES</u>, MAZE &gt; <u>ROCK A WILLIAM</u>, HARRY HOOD<i> (JAM CHART)</i>, FRANKENSTEIN<br><b>ENCORE:</b> PRINCE CASPIAN, JOHNNY B. GOODE</div>
+  <div class="k" id="slven"></div>
+  <div class="k" id="slnote" style="color:#ff8a3d;font-size:8px"></div><div class="setl" id="setl"></div>
   <div class="row"><button id="toTravel">NEXT SHOW ▶</button><button id="quit3" style="font-size:11px;padding:10px 16px">TITLE</button></div></div></div>
 </section>
 <script src="assets1.js"></script><script src="assets2.js"></script><script src="game.js"></script><script src="travel.js"></script>
@@ -212,26 +213,40 @@ document.addEventListener('fullscreenchange',()=>setTimeout(fit,100));
 document.getElementById('rotok').onclick=()=>{window._rotok=1;fit()};
 function ov(id){document.querySelectorAll('#game .ov').forEach(o=>{if(o.id!=='rot')o.classList.toggle('on',o.id===id)})}
 let curC=0;
-function launch(){curC=sel;ov(null);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));gameEl.classList.add('on');fit();
+const UI={1:{ven:"REAL SETLIST · 2/13/97 · SHEPHERD'S BUSH EMPIRE (VIA PHISH.IN)",setl:"<b>SET 1:</b> CHALK DUST TORTURE, WOLFMAN'S BROTHER, 2001<i> (SUPER BAD TEASE)</i> &gt; STASH, <u>WALFREDO</u>, TASTE, WASTE, POOR HEART, CHARACTER ZERO, PEACHES EN REGALIA, <u>LOVE ME</u>, DAVID BOWIE<br><b>SET 2:</b> JULIUS, CARS TRUCKS BUSES, <u>MY SOUL</u>, PUNCH YOU IN THE EYE &gt; JAM<i> (CLOSE TO THE EDGE TEASE \u00b7 JAM CHART)</i> &gt; SLAVE TO THE TRAFFIC LIGHT, <u>WHEN THE CIRCUS COMES</u>, MAZE &gt; <u>ROCK A WILLIAM</u>, HARRY HOOD<i> (JAM CHART)</i>, FRANKENSTEIN<br><b>ENCORE:</b> PRINCE CASPIAN, JOHNNY B. GOODE",found:'★ YOU FOUND THE 2/13/97 SETLIST PAGE! ★ = PHISH DEBUT',hint:'FIND THE HIDDEN SETLIST PAGE IN THE MARKET TO REVEAL THE SECRETS',trip:'london',
+ k:'LONDON · CLEARED',t:'PAGE 1 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:['THE PAGE GLOWS IN YOUR HANDS. ITS RUNES SPELL ONE WORD: <b style="color:#ffd23f">"ICCULUS."</b> THE FREED LIZARDS CHEER IN THE RAIN.',"BUT A MESSAGE IS PINNED TO THE STAGE DOOR, STAMPED WITH WILSON'S SEAL: <i>\"THE NEXT PAGE SLEEPS BENEATH A CHURCH OF SONG. COME TO AMSTERDAM... IF YOU DARE.\"</i>"],n:'NEXT: AMSTERDAM · PARADISO · 2/17/97',next:2},
+2:{ven:'REAL SETLIST · 2/17/97 · PARADISO, AMSTERDAM (VIA PHISH.IN)',setl:'<b>SET 1:</b> <u>SOUL SHAKEDOWN PARTY</u>, DIVIDED SKY, WILSON, MY SOUL, GUYUTE, TIMBER (JERRY THE MULE), BILLY BREATHES, LLAMA, BATHTUB GIN<i> (TEQUILA TEASE)</i>, GOLGI APPARATUS<br><b>SET 2:</b> THE SQUIRMING COIL, DOWN WITH DISEASE &gt; <u>CARINI</u> &gt; TASTE &gt; DOWN WITH DISEASE<i> (~47 MINUTES · JAM CHART "MUST-HEAR")</i>, SUZY GREENBERG, PRINCE CASPIAN<br><b>ENCORE:</b> SLEEPING MONKEY, ROCKY TOP',
+ found:'★ YOU FOUND THE 2/17/97 SETLIST PAGE! ★ = PHISH DEBUT',hint:'FIND THE HIDDEN SETLIST PAGE BY THE CANALS TO REVEAL THE SECRETS',trip:'ams',
+ k:'AMSTERDAM · CLEARED',t:'PAGE 2 OF THE HELPING FRIENDLY BOOK RECOVERED!',p:['UNDER THE STAINED GLASS OF THE OLD CHURCH, THE SECOND PAGE WAITS. ITS RUNES SPELL ONE WORD: <b style="color:#ffd23f">"TELA."</b>','THE STRIPERS IN THE CANAL WERE CARRYING MESSAGES SOUTH... TO SOMEONE WAITING IN AN OLD THEATER IN <i>ROME.</i>'],n:'NEXT: ROME · TEATRO OLIMPICO · 2/22/97 (COMING SOON)',next:0}};
+let curLvl=+(new URLSearchParams(location.search).get('lvl'))===2?2:1;
+function fillStory(l){const u=UI[l];document.getElementById('stK').textContent=u.k;document.getElementById('stT').textContent=u.t;document.getElementById('stP').innerHTML=u.p.map(x=>'<p>'+x+'</p>').join('');document.getElementById('stN').textContent=u.n;
+ const nb=document.getElementById('toNext');nb.style.display=u.next?'':'none';document.getElementById('again2').style.display=u.next?'none':''}
+
+function launch(lvl){if(lvl)curLvl=lvl;curC=sel;ov(null);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));gameEl.classList.add('on');fit();
  try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}catch(e){}
  PG.start(cv,C[sel].id,PORT,(ev,st)=>{if(ev==='over')ov('ovOver');if(ev==='done'){window._last=st;
   document.getElementById('pgimg').src='';const m=PG.ATLAS.props_page;const c2=document.createElement('canvas');c2.width=m[2];c2.height=m[3];c2.getContext('2d').drawImage(PG.img.atlas,m[0],m[1],m[2],m[3],0,0,m[2],m[3]);document.getElementById('pgimg').src=c2.toDataURL();
   const mm=Math.floor(st.time/60),ss=String(Math.floor(st.time%60)).padStart(2,'0');
+  const u=UI[curLvl];document.getElementById('slven').textContent=u.ven;document.getElementById('setl').innerHTML=u.setl;fillStory(curLvl);
   document.getElementById('stats').innerHTML=C[sel].n+' · SCORE '+st.score+'<br>LIZARDS FREED: '+st.freed+' · HITS: '+st.hits+' · TIME '+mm+':'+ss;
-  const SL=document.getElementById('setl');SL.classList.toggle('found',!!st.setlist);document.getElementById('slnote').innerHTML=st.setlist?'★ YOU FOUND THE 2/13/97 SETLIST PAGE! ★ = PHISH DEBUT':'FIND THE HIDDEN SETLIST PAGE IN THE MARKET TO REVEAL THE SECRETS';ov('ovScore');PG.SFX.pick()}})}
+  const SL=document.getElementById('setl');SL.classList.toggle('found',!!st.setlist);document.getElementById('slnote').innerHTML=st.setlist?u.found:u.hint;ov('ovScore');PG.SFX.pick()}},curLvl)}
 function quit(){PG.stop();gameEl.classList.remove('on');ov(null);show('title');fit()}
-document.getElementById('go').onclick=()=>{beep(523,.1);setTimeout(()=>beep(784,.18),110);launch()};
+document.getElementById('go').onclick=()=>{beep(523,.1);setTimeout(()=>beep(784,.18),110);launch(curLvl)};
 cv.addEventListener('pointerdown',()=>PG.begin());
 document.getElementById('cont').onclick=()=>{ov(null);PG.continue_()};
 ['quit','quit2','quit3','quit4'].forEach(i=>document.getElementById(i).onclick=quit);
-document.getElementById('again2').onclick=()=>launch();
+document.getElementById('again2').onclick=()=>launch(curLvl);
+document.getElementById('toNext').onclick=()=>{const n=UI[curLvl].next;if(n)launch(n)};
 // tour-bus travel scene (reusable: TRIPS[level])
 const TRIPS={london:{from:{name:'LONDON',lon:-0.12,lat:51.51,date:'2/13/97',venue:"SHEPHERD'S BUSH EMPIRE"},
  stops:[{name:'BRUSSELS',lon:4.35,lat:50.85,date:'2/14/97',venue:'LE BOTANIQUE'},{name:'COLOGNE',lon:6.96,lat:50.94,date:'2/16/97',venue:'ALTER WARTESAAL'}],
- to:{name:'AMSTERDAM',lon:4.9,lat:52.37,date:'2/17/97',venue:'PARADISO'},gag:'lizard',vehicle:'bus'}};
+ to:{name:'AMSTERDAM',lon:4.9,lat:52.37,date:'2/17/97',venue:'PARADISO'},gag:'lizard',vehicle:'bus'},
+ ams:{map:'europe',from:{name:'AMSTERDAM',lon:4.9,lat:52.37,date:'2/17/97',venue:'PARADISO'},
+ stops:[{name:'PARIS',lon:2.37,lat:48.86,date:'2/18/97',venue:'BATACLAN'},{name:'MILAN',lon:9.19,lat:45.48,date:'2/20/97',venue:'TEATRO SMERALDO'},{name:'FLORENCE',lon:11.19,lat:43.80,date:'2/21/97',venue:'TENAX'}],
+ to:{name:'ROME',lon:12.48,lat:41.89,date:'2/22/97',venue:'TEATRO OLIMPICO'},gag:'fish',vehicle:'bus'}};
 function travel(key,then){const tr=TRIPS[key],tv=document.getElementById('tv');ov('ovTravel');const sync=()=>{['left','top','width','height'].forEach(p=>tv.style[p]=cv.style[p])};sync();
  window._trip=TravelScene.play(Object.assign({canvas:tv,sync,music:document.getElementById('bMus').textContent.indexOf('ON')>=0,onDone:()=>{window._trip=null;then()}},tr))}
-document.getElementById('toTravel').onclick=()=>travel('london',()=>{ov('ovStory');PG.SFX.pick()});
+document.getElementById('toTravel').onclick=()=>travel(UI[curLvl].trip,()=>{fillStory(curLvl);ov('ovStory');PG.SFX.pick()});
 document.getElementById('bPause').onclick=()=>{PG.setPaused(true);ov('ovPause')};
 document.getElementById('resume').onclick=()=>{ov(null);PG.setPaused(false)};
 document.getElementById('bMus').onclick=e=>{e.target.textContent=PG.toggleMusic()?'♪ ON':'♪ OFF'};
