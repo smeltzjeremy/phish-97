@@ -1,14 +1,14 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>PHISH '97 — The Helping Friendly Tour</title>
-<meta name="theme-color" content="#07040d">
+<meta name="theme-color" content="#07040d"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:#07040d;color:#f3e9d2;font-family:'Press Start 2P',monospace;overflow-x:hidden}
-body{min-height:100dvh}
-.screen{display:none;min-height:100dvh;position:relative;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+html,body{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;background:#07040d;color:#f3e9d2;font-family:'Press Start 2P',monospace;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;touch-action:manipulation}
+*{-webkit-touch-callout:none}
+.screen{display:none;position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
 .screen.on{display:flex;flex-direction:column;align-items:center}
 .stage{position:fixed;inset:0;pointer-events:none;z-index:0;
  background:radial-gradient(ellipse 45% 70% at 18% -5%,rgba(255,40,60,.45),transparent 70%),
@@ -56,12 +56,12 @@ button:disabled{opacity:.4}
 .lv .v{font-size:11px;line-height:1.9}.lv .c{font-size:12px;color:#ff8a3d;animation:blink 1.2s steps(2,start) infinite}
 .lv p{font-size:9px;line-height:2;color:#cfc3e0}
 
-#game{position:fixed;inset:0;background:#000;display:none;z-index:5;touch-action:none;user-select:none;-webkit-user-select:none}
+#game{position:fixed;left:0;top:0;width:100%;height:100%;overscroll-behavior:none;-webkit-touch-callout:none;background:#000;display:none;z-index:5;touch-action:none;user-select:none;-webkit-user-select:none}
 #game.on{display:block}
 #game.noctl .tc{display:none!important}
 @media (max-height:520px){#game .lv{padding:12px;gap:8px}#game .lv .t{font-size:14px}#game .lv p{font-size:8px;line-height:1.7}#game .lv img{width:44px}#game .lv button{font-size:13px;padding:10px 18px}}
-#cv{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);image-rendering:auto;background:#000}
-.tc{position:absolute;z-index:6;display:none}
+#cv{position:absolute;left:0;top:0;touch-action:none;image-rendering:auto;background:#000}
+.tc{position:absolute;z-index:6;display:none;touch-action:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .touch .tc{display:block}
 #stick{opacity:.7;left:calc(14px + env(safe-area-inset-left));bottom:14px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.08);border:3px solid rgba(255,210,63,.45)}
 #knob{position:absolute;left:45px;top:45px;width:60px;height:60px;border-radius:50%;background:rgba(255,210,63,.55);border:3px solid #ffd23f}
@@ -71,8 +71,9 @@ button:disabled{opacity:.4}
 #bS{right:calc(22px + env(safe-area-inset-right));bottom:112px;background:rgba(255,138,61,.75)}
 #bS.ready{animation:pulse .5s infinite alternate}
 @keyframes pulse{to{box-shadow:0 0 18px 6px #ffd23f}}
-#topbtns{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:7;display:flex;gap:6px}
-#topbtns button{font-size:9px;padding:8px 10px;box-shadow:2px 2px 0 #1b2a8a}
+#topbtns{position:absolute;z-index:7;display:flex;gap:4px;transform:translateX(-50%)}
+#topbtns button{font-size:8px;padding:5px 7px;border-width:2px;box-shadow:2px 2px 0 #1b2a8a;touch-action:none}
+#bFS{display:none}
 .ov{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(7,4,13,.88);padding:16px}
 .ov.on{display:flex}
 .ov .lv{max-height:96%;overflow:auto}
@@ -99,7 +100,7 @@ button:disabled{opacity:.4}
 
 <section id="game">
  <canvas id="cv" width="1024" height="576"></canvas>
- <div id="topbtns"><button id="bMus">♪ ON</button><button id="bPause">II</button></div>
+ <div id="topbtns"><button id="bMus">♪ ON</button><button id="bPause">II</button><button id="bFS">⛶</button></div>
  <div class="tc" id="stick"><div id="knob"></div></div>
  <button class="tc gb" id="bS">SPECIAL</button><button class="tc gb" id="bJ">JUMP</button><button class="tc gb" id="bA">ATTACK</button>
  <div class="ov" id="rot"><div class="ph">📱</div><div>ROTATE YOUR PHONE<br>FOR THE BEST GIG</div><button id="rotok" style="font-size:10px;padding:10px 14px">PLAY ANYWAY</button></div>
@@ -146,9 +147,38 @@ const PG=window.PhishGame,gameEl=document.getElementById('game'),cv=document.get
 const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;if(isTouch)gameEl.classList.add('touch');
 const PORT={};C.forEach(c=>{const i=new Image();i.src=IMG[c.id];PORT[c.id]=i});
 PG.loadAll();
-function fit(){const w=innerWidth,h=innerHeight,s=Math.min(w/1024,h/576);cv.style.width=1024*s+'px';cv.style.height=576*s+'px';
- document.getElementById('rot').classList.toggle('on',gameEl.classList.contains('on')&&isTouch&&h>w&&!window._rotok)}
-addEventListener('resize',fit);addEventListener('orientationchange',()=>setTimeout(fit,200));
+const probe=document.createElement('div');probe.style.cssText='position:fixed;left:0;top:0;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';document.body.appendChild(probe);
+function fit(){const vv=window.visualViewport;const w=vv?vv.width*vv.scale:innerWidth,h=vv?vv.height*vv.scale:innerHeight;
+ const W0=Math.round(vv?vv.width:innerWidth),H0=Math.round(vv?vv.height:innerHeight);
+ gameEl.style.width=W0+'px';gameEl.style.height=H0+'px';
+ const cs=getComputedStyle(probe),si={t:parseFloat(cs.paddingTop)||0,r:parseFloat(cs.paddingRight)||0,b:parseFloat(cs.paddingBottom)||0,l:parseFloat(cs.paddingLeft)||0};
+ const aw=W0-si.l-si.r,ah=H0-si.t-si.b,s=Math.min(aw/1024,ah/576);const cw=1024*s,ch=576*s,cl=si.l+(aw-cw)/2,ct=si.t+(ah-ch)/2;
+ Object.assign(cv.style,{width:cw+'px',height:ch+'px',left:cl+'px',top:ct+'px'});
+ const tb=document.getElementById('topbtns');tb.style.left=(cl+cw/2)+'px';tb.style.top=(ct+Math.max(4,6*s))+'px';tb.style.transformOrigin='top center';tb.style.transform='translateX(-50%) scale('+clampN(s*1.6,.6,1.1)+')';
+ const u=H0>W0?clampN(W0/390,1,1.3):clampN(ch/390,.75,1.25);// control unit scale
+ const set=(id,o)=>Object.assign(document.getElementById(id).style,o);
+ const stS=140*u,bA=78*u,bB=64*u,pad=12*u;
+ set('stick',{width:stS+'px',height:stS+'px',left:(si.l+pad)+'px',bottom:(si.b+pad)+'px',right:'auto',top:'auto'});
+ set('knob',{width:stS*.4+'px',height:stS*.4+'px',left:stS*.3-3+'px',top:stS*.3-3+'px'});
+ set('bA',{width:bA+'px',height:bA+'px',right:(si.r+pad)+'px',bottom:(si.b+pad)+'px'});
+ set('bJ',{width:bB+'px',height:bB+'px',right:(si.r+pad+bA+10*u)+'px',bottom:(si.b+pad)+'px'});
+ set('bS',{width:bB+'px',height:bB+'px',right:(si.r+pad+8*u)+'px',bottom:(si.b+pad+bA+10*u)+'px'});
+ document.getElementById('rot').classList.toggle('on',gameEl.classList.contains('on')&&isTouch&&H0>W0&&!window._rotok)}
+function clampN(v,a,b){return v<a?a:v>b?b:v}
+addEventListener('resize',fit);addEventListener('orientationchange',()=>{fit();setTimeout(fit,250);setTimeout(fit,700)});
+if(window.visualViewport){visualViewport.addEventListener('resize',fit);visualViewport.addEventListener('scroll',()=>{window.scrollTo(0,0);fit()})}
+// ---- anti-zoom / anti-scroll ----
+const stopEv=e=>{e.preventDefault()};
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev,stopEv,{passive:false}));
+document.addEventListener('dblclick',stopEv,{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches.length>1){e.preventDefault();return}const sc=e.target.closest&&e.target.closest('.screen.on');if(!sc||gameEl.classList.contains('on'))e.preventDefault()},{passive:false});
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouchEnd<350&&!e.target.closest('button,.card'))e.preventDefault();lastTouchEnd=n},{passive:false});
+gameEl.addEventListener('touchstart',e=>{if(e.target.closest('.tc,#cv,#topbtns'))e.preventDefault()},{passive:false});
+gameEl.addEventListener('touchend',e=>{if(!e.target.closest('.tc,#cv,#topbtns'))return;const b=e.target.closest('#topbtns button');e.preventDefault();if(b)b.click()},{passive:false});
+// fullscreen (where supported, not iPhone)
+const fsEl=document.documentElement,fsReq=fsEl.requestFullscreen||fsEl.webkitRequestFullscreen;
+if(fsReq&&!/iPhone|iPod/.test(navigator.userAgent)){const b=document.getElementById('bFS');b.style.display='block';b.onclick=()=>{if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{fsReq.call(fsEl).then?.(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}).catch?.(()=>{})}}}
+document.addEventListener('fullscreenchange',()=>setTimeout(fit,100));
 document.getElementById('rotok').onclick=()=>{window._rotok=1;fit()};
 function ov(id){document.querySelectorAll('#game .ov').forEach(o=>{if(o.id!=='rot')o.classList.toggle('on',o.id===id)})}
 let curC=0;
